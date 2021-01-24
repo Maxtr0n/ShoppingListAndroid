@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">Bevásárló Lista</string>
+    <string name="add_item">Hozzáadás</string>
+    <string name="placeholder_text">Placeholder text</string>
+    <string name="bevasarlo_lista">Bevásárló lista</string>
+    <string name="buy">Vásárlás</string>
+    <string name="Delete">Törlés</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="rucikk_neve">Árucikk neve</string>
+    <string name="cancel">Mégsem</string>
+    <string name="add_a_new_item">Add meg az árucikk nevét</string>
+    <string name="yes">Igen</string>
+    <string name="no">Nem</string>
+    <string name="are_you_sure">Biztosan megveszed a kijelölt termékeket?</string>
+</resources>
