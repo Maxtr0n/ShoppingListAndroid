@@ -1,23 +1,19 @@
 package hu.bme.aut.android.shoppinglist
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.Toast
-import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import hu.bme.aut.android.shoppinglist.database.ShoppingItem
 import hu.bme.aut.android.shoppinglist.adapters.ShoppingListAdapter
 import hu.bme.aut.android.shoppinglist.adapters.ShoppingListListener
+import hu.bme.aut.android.shoppinglist.database.ShoppingItem
 import hu.bme.aut.android.shoppinglist.database.ShoppingListDatabase
 import hu.bme.aut.android.shoppinglist.databinding.ActivityMainBinding
 import hu.bme.aut.android.shoppinglist.viewModels.ShoppingListViewModel
