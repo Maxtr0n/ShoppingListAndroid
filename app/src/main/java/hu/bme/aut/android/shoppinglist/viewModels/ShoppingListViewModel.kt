@@ -1,6 +1,8 @@
 package hu.bme.aut.android.shoppinglist.viewModels
 
 import android.app.Application
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,6 +19,7 @@ class ShoppingListViewModel(
         application: Application
 ) : AndroidViewModel(application) {
 
+    private val TAG = "ViewModel"
     private var viewModelJob = Job()
 
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
@@ -24,7 +27,7 @@ class ShoppingListViewModel(
     val items = database.getAllItems()
 
     private var  firebaseDb = Firebase.firestore
-    private lateinit var itemsCollectionReference: CollectionReference
+    private var itemsCollectionReference: CollectionReference
 
     init {
         itemsCollectionReference = firebaseDb.collection("items")
@@ -39,6 +42,7 @@ class ShoppingListViewModel(
     private suspend fun insert(newItem: ShoppingItem){
         withContext(Dispatchers.IO){
             database.insert(newItem)
+            itemsCollectionReference.add(newItem)
         }
     }
 
@@ -51,6 +55,7 @@ class ShoppingListViewModel(
    private suspend fun delete(item: ShoppingItem){
         withContext(Dispatchers.IO){
             database.delete(item)
+           // item.name?.let { itemsCollectionReference.document(it).delete().addOnSuccessListener { Log.d(TAG, "Document successfully deleted") } }
         }
     }
 
