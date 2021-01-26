@@ -19,10 +19,6 @@ class ShoppingListViewModel(
 
     val items = database.getAllItems()
 
-    val itemsString = Transformations.map(items){ items ->
-       // formatItems(items, application.resources)
-    }
-
     fun onAddItem(newItem: ShoppingItem) {
         uiScope.launch {
             insert(newItem)
