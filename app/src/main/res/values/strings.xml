@@ -13,4 +13,5 @@
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
     <string name="are_you_sure">Biztosan megveszed a kijelölt termékeket?</string>
+    <string name="are_you_sure_to_remove">Biztosan törlöd a terméket?</string>
 </resources>

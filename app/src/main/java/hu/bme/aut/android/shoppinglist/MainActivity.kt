@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var analytics: FirebaseAnalytics
-    private var  firebaseDb = Firebase.firestore
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,4 +112,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 }

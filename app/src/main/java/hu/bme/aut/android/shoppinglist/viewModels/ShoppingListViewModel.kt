@@ -5,7 +5,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import hu.bme.aut.android.shoppinglist.Event
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import hu.bme.aut.android.shoppinglist.database.ItemDao
 import hu.bme.aut.android.shoppinglist.database.ShoppingItem
 import kotlinx.coroutines.*
@@ -21,10 +23,12 @@ class ShoppingListViewModel(
 
     val items = database.getAllItems()
 
-    private val _itemSwiped = MutableLiveData<Event<ShoppingItem>>()
+    private var  firebaseDb = Firebase.firestore
+    private lateinit var itemsCollectionReference: CollectionReference
 
-    val itemSwiped : LiveData<Event<ShoppingItem>>
-        get() = _itemSwiped
+    init {
+        itemsCollectionReference = firebaseDb.collection("items")
+    }
 
     fun onAddItem(newItem: ShoppingItem) {
         uiScope.launch {
