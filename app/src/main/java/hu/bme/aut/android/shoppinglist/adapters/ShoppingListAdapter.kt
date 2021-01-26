@@ -39,6 +39,10 @@ class ShoppingListAdapter(private val clickListener: ShoppingListListener) : Lis
         holder.bind(item, clickListener)
     }
 
+    fun getItemAt(position: Int) : ShoppingItem{
+        return currentList[position]
+    }
+
 }
 
 class ShoppingListDiffCallback : DiffUtil.ItemCallback<ShoppingItem>() {

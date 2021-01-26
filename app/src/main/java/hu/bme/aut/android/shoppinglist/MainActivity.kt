@@ -1,11 +1,14 @@
 package hu.bme.aut.android.shoppinglist
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -35,7 +38,6 @@ class MainActivity : AppCompatActivity() {
         val dataSource = ShoppingListDatabase.getInstance(application).itemDao
         val shoppingListViewModelFactory = ShoppingListViewModelFactory(dataSource, application)
 
-        //val shoppingListViewModel: ShoppingListViewModel by viewModels { shoppingListViewModelFactory }
         val shoppingListViewModel = ViewModelProvider(this, shoppingListViewModelFactory).get(ShoppingListViewModel::class.java)
 
         binding.shoppingListViewModel = shoppingListViewModel
@@ -53,35 +55,55 @@ class MainActivity : AppCompatActivity() {
             shoppingListAdapter.submitList(items)
         })
 
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
+            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
+                return false
+            }
 
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                shoppingListViewModel.onDeleteItem(shoppingListAdapter.getItemAt(viewHolder.adapterPosition))
+            }
+        }
+
+        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
+        itemTouchHelper.attachToRecyclerView(rvShoppingItem)
+
+
+        initFab(shoppingListViewModel)
+        initBuyButton(shoppingListViewModel)
+    }
+
+    private fun initBuyButton(shoppingListViewModel: ShoppingListViewModel) {
+        val btnBuy = binding.btnBuy
+        btnBuy.setOnClickListener {
+            val dialog = MaterialDialog(this).show {
+                message(R.string.are_you_sure)
+                positiveButton(R.string.yes) {
+                    for (item in shoppingListViewModel.items.value!!) {
+                        when (item.acquired) {
+                            true -> shoppingListViewModel.onDeleteItem(item)
+                        }
+                    }
+                }
+                negativeButton(R.string.no) {
+                    cancel()
+                }
+            }
+        }
+    }
+
+    private fun initFab(shoppingListViewModel: ShoppingListViewModel) {
         val fab = binding.fabAdd
         fab.setOnClickListener {
             val dialog = MaterialDialog(this)
             dialog.show {
-                input(hintRes = R.string.rucikk_neve){_, text ->
+                input(hintRes = R.string.rucikk_neve) { _, text ->
                     analytics.logEvent("item_added", null)
-                    shoppingListViewModel.onAddItem(ShoppingItem( name = text.toString()))
+                    shoppingListViewModel.onAddItem(ShoppingItem(name = text.toString()))
                 }
                 positiveButton(R.string.add_item)
                 negativeButton(R.string.cancel)
             }
-        }
-
-        val btnBuy = binding.btnBuy
-        btnBuy.setOnClickListener {
-           val dialog = MaterialDialog(this).show {
-               message(R.string.are_you_sure)
-               positiveButton(R.string.yes){
-                   for(item in shoppingListViewModel.items.value!!){
-                       when (item.acquired){
-                           true -> shoppingListViewModel.onDeleteItem(item)
-                       }
-                   }
-               }
-                negativeButton (R.string.no){
-                    cancel()
-               }
-           }
         }
     }
 }

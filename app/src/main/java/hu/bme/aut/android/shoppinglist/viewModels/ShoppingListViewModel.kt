@@ -2,7 +2,10 @@ package hu.bme.aut.android.shoppinglist.viewModels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import hu.bme.aut.android.shoppinglist.Event
 import hu.bme.aut.android.shoppinglist.database.ItemDao
 import hu.bme.aut.android.shoppinglist.database.ShoppingItem
 import kotlinx.coroutines.*
@@ -12,12 +15,16 @@ class ShoppingListViewModel(
         application: Application
 ) : AndroidViewModel(application) {
 
-
     private var viewModelJob = Job()
 
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     val items = database.getAllItems()
+
+    private val _itemSwiped = MutableLiveData<Event<ShoppingItem>>()
+
+    val itemSwiped : LiveData<Event<ShoppingItem>>
+        get() = _itemSwiped
 
     fun onAddItem(newItem: ShoppingItem) {
         uiScope.launch {
@@ -53,6 +60,10 @@ class ShoppingListViewModel(
         withContext(Dispatchers.IO){
             database.update(item)
         }
+    }
+
+    fun userSwipesItem(item: ShoppingItem){
+        _itemSwiped.value = Event(item)
     }
 
     override fun onCleared() {
