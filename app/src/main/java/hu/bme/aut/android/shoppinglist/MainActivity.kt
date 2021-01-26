@@ -1,6 +1,8 @@
 package hu.bme.aut.android.shoppinglist
 
 import android.os.Bundle
+import android.view.KeyEvent
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.firestore.ktx.firestore
@@ -21,6 +24,7 @@ import hu.bme.aut.android.shoppinglist.database.ShoppingListDatabase
 import hu.bme.aut.android.shoppinglist.databinding.ActivityMainBinding
 import hu.bme.aut.android.shoppinglist.viewModels.ShoppingListViewModel
 import hu.bme.aut.android.shoppinglist.viewModels.ShoppingListViewModelFactory
+import java.security.Key
 
 class MainActivity : AppCompatActivity() {
 
@@ -79,15 +83,9 @@ class MainActivity : AppCompatActivity() {
             val dialog = MaterialDialog(this).show {
                 message(R.string.are_you_sure)
                 positiveButton(R.string.yes) {
-                    for (item in shoppingListViewModel.items.value!!) {
-                        when (item.acquired) {
-                            true -> shoppingListViewModel.onDeleteItem(item)
-                        }
-                    }
+                    shoppingListViewModel.deleteCheckedItems()
                 }
-                negativeButton(R.string.no) {
-                    cancel()
-                }
+                negativeButton(R.string.no)
             }
         }
     }
@@ -100,7 +98,15 @@ class MainActivity : AppCompatActivity() {
                 input(hintRes = R.string.rucikk_neve) { _, text ->
                     analytics.logEvent("item_added", null)
                     shoppingListViewModel.onAddItem(ShoppingItem(name = text.toString()))
-                }
+                }.getInputField().setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
+                    if(keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP){
+                        shoppingListViewModel.onAddItem(ShoppingItem(name = getInputField().text.toString()))
+                        dialog.dismiss()
+                        return@OnKeyListener true
+                    }
+                    false
+                })
+
                 positiveButton(R.string.add_item)
                 negativeButton(R.string.cancel)
             }

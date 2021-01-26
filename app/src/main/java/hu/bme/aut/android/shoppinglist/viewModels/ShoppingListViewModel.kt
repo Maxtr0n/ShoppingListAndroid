@@ -62,9 +62,14 @@ class ShoppingListViewModel(
         }
     }
 
-    fun userSwipesItem(item: ShoppingItem){
-        _itemSwiped.value = Event(item)
+    fun deleteCheckedItems(){
+        for(item in items.value!!){
+            when(item.acquired){
+                true -> onDeleteItem(item)
+            }
+        }
     }
+
 
     override fun onCleared() {
         super.onCleared()
