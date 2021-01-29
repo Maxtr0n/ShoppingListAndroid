@@ -36,7 +36,9 @@ class ShoppingListViewModel(
     }
 
    private fun listenToShoppingItems(){
-       collectionReference.addSnapshotListener { value, error ->
+       collectionReference
+               .orderBy("name")
+               .addSnapshotListener { value, error ->
            if(error != null) {
                Log.w(TAG, "Listen failed.", error)
                items.value = null
