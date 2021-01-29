@@ -38,12 +38,8 @@ class MainActivity : AppCompatActivity() {
         analytics = FirebaseAnalytics.getInstance(this)
 
         val application = requireNotNull(this).application
-
-        val dataSource = ShoppingListDatabase.getInstance(application).itemDao
-        val shoppingListViewModelFactory = ShoppingListViewModelFactory(dataSource, application)
-
+        val shoppingListViewModelFactory = ShoppingListViewModelFactory(application)
         val shoppingListViewModel = ViewModelProvider(this, shoppingListViewModelFactory).get(ShoppingListViewModel::class.java)
-
         binding.shoppingListViewModel = shoppingListViewModel
 
         val rvShoppingItem = binding.rvShoppingItems

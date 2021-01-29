@@ -6,12 +6,12 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "shopping_items_table")
 data class ShoppingItem(
-    @PrimaryKey(autoGenerate = true)
-    val id: Long = 0L,
+        @PrimaryKey(autoGenerate = false)
+        val id: String = "",
 
-    val name: String?,
+        val name: String? = null,
 
-    val acquired: Boolean = false
+        val acquired: Boolean = false
 ) {
 
 }
