@@ -3,7 +3,6 @@ package hu.bme.aut.android.shoppinglist.viewModels
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import hu.bme.aut.android.shoppinglist.database.ItemDao
 
 class ShoppingListViewModelFactory(
         private val application: Application

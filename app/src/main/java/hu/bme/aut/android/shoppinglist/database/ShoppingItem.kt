@@ -4,11 +4,8 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "shopping_items_table")
-data class ShoppingItem(
-        @PrimaryKey(autoGenerate = false)
-        val id: String = "",
 
+data class ShoppingItem(
         val name: String? = null,
 
         val acquired: Boolean = false

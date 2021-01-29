@@ -3,7 +3,6 @@ package hu.bme.aut.android.shoppinglist
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -15,16 +14,12 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import hu.bme.aut.android.shoppinglist.adapters.ShoppingListAdapter
 import hu.bme.aut.android.shoppinglist.adapters.ShoppingListListener
 import hu.bme.aut.android.shoppinglist.database.ShoppingItem
-import hu.bme.aut.android.shoppinglist.database.ShoppingListDatabase
 import hu.bme.aut.android.shoppinglist.databinding.ActivityMainBinding
 import hu.bme.aut.android.shoppinglist.viewModels.ShoppingListViewModel
 import hu.bme.aut.android.shoppinglist.viewModels.ShoppingListViewModelFactory
-import java.security.Key
 
 class MainActivity : AppCompatActivity() {
 
