@@ -6,9 +6,11 @@ import androidx.room.PrimaryKey
 
 
 data class ShoppingItem(
-        val name: String? = null,
+        var id: String = "",
 
-        val acquired: Boolean = false
+        var name: String = "",
+
+        var acquired: Boolean = false
 ) {
 
 }
