@@ -14,7 +14,7 @@ import kotlinx.coroutines.*
 class ShoppingListViewModel(
         application: Application
 ) : AndroidViewModel(application) {
-
+    
     private val firebaseDb = Firebase.firestore
     private val collectionReference = firebaseDb.collection("items")
 
