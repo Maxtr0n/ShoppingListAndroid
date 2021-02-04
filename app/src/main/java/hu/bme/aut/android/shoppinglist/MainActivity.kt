@@ -5,6 +5,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -52,6 +53,14 @@ class MainActivity : AppCompatActivity() {
 
         shoppingListViewModel.items.observe(this, Observer { items ->
             //update UI
+            if(items.isEmpty()){
+                binding.tvEmpty.visibility = View.VISIBLE
+                binding.rvShoppingItems.visibility = View.GONE
+            }
+            else {
+                binding.tvEmpty.visibility = View.GONE
+                binding.rvShoppingItems.visibility = View.VISIBLE
+            }
             shoppingListAdapter.submitList(items)
         })
 
