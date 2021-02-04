@@ -4,12 +4,11 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "shopping_items_table")
+
 data class ShoppingItem(
-        @PrimaryKey(autoGenerate = false)
         var id: String = "",
 
-        var name: String? = null,
+        var name: String = "",
 
         var acquired: Boolean = false
 ) {
