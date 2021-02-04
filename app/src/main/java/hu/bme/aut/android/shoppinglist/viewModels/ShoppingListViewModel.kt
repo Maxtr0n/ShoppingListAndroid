@@ -30,9 +30,6 @@ class ShoppingListViewModel(
 
     fun onAddItem(item: ShoppingItem) {
         collectionReference.add(item)
-                .addOnSuccessListener {
-                    Log.d(TAG, "Uploaded item to server: "+ item.name)
-                }
     }
 
    private fun listenToShoppingItems(){
@@ -40,7 +37,6 @@ class ShoppingListViewModel(
                .orderBy("name")
                .addSnapshotListener { value, error ->
            if(error != null) {
-               Log.w(TAG, "Listen failed.", error)
                items.value = null
                return@addSnapshotListener
            }
@@ -62,16 +58,10 @@ class ShoppingListViewModel(
 
     fun onDeleteItem(item: ShoppingItem) {
         collectionReference.document(item.id).delete()
-                .addOnSuccessListener {
-                    Log.d(TAG, "Deleted item from server: "+ item.name)
-                }
     }
 
     fun onUpdateItem(item: ShoppingItem) {
         collectionReference.document(item.id).set(item)
-                .addOnSuccessListener {
-                    Log.d(TAG, "Updated item on server: "+ item.name)
-                }
     }
 
     fun deleteCheckedItems() {
