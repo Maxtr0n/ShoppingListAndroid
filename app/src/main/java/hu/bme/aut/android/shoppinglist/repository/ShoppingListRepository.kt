@@ -8,7 +8,6 @@ import com.google.firebase.ktx.Firebase
 import hu.bme.aut.android.shoppinglist.database.ItemDao
 import hu.bme.aut.android.shoppinglist.database.ShoppingItem
 import hu.bme.aut.android.shoppinglist.database.ShoppingListDatabase
-import hu.bme.aut.android.shoppinglist.network.NetworkShoppingItem
 import hu.bme.aut.android.shoppinglist.network.ShoppingListService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -27,14 +26,12 @@ class ShoppingListRepository(private val database: ItemDao) {
         withContext(Dispatchers.IO) {
             Log.d(TAG, "refreshShoppingList() called")
             val list = mutableListOf<ShoppingItem>()
-            var networkShoppingItem: NetworkShoppingItem
             var shoppingItem: ShoppingItem
 
             collectionReference.get()
                     .addOnSuccessListener { result ->
                         for (document in result) {
-                            networkShoppingItem = document.toObject<NetworkShoppingItem>()
-                            shoppingItem = ShoppingItem(id = document.id, name = networkShoppingItem.name, acquired = networkShoppingItem.acquired)
+                            shoppingItem = document.toObject()
                             list.add(shoppingItem)
                         }
                         database.insertAll(list.toList())
