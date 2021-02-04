@@ -14,4 +14,5 @@
     <string name="no">Nem</string>
     <string name="are_you_sure">Biztosan megveszed a kijelölt termékeket?</string>
     <string name="are_you_sure_to_remove">Biztosan törlöd a terméket?</string>
+    <string name="adj_hozz_egy_term_ket_a_list_hoz">Adj hozzá egy terméket a listához</string>
 </resources>

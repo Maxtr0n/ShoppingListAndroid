@@ -47,6 +47,14 @@ class MainActivity : AppCompatActivity() {
 
         shoppingListViewModel.items.observe(this, Observer { items ->
             //update UI
+            if(items.isEmpty()){
+                binding.tvEmpty.visibility = View.VISIBLE
+                binding.rvShoppingItems.visibility = View.INVISIBLE
+            }
+            else {
+                binding.tvEmpty.visibility = View.INVISIBLE
+                binding.rvShoppingItems.visibility = View.VISIBLE
+            }
             shoppingListAdapter.submitList(items)
         })
 
