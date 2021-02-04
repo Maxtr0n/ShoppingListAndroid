@@ -1,26 +1,18 @@
-package hu.bme.aut.android.shoppinglist.viewModels
+package hu.bme.aut.android.shoppinglist.repository
 
-import android.app.Application
-import android.util.Log
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import hu.bme.aut.android.shoppinglist.database.ShoppingItem
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ShoppingListViewModel(
-        application: Application
-) : AndroidViewModel(application) {
+class ShoppingListRepository {
 
     private val firebaseDb = Firebase.firestore
     private val collectionReference = firebaseDb.collection("items")
-
-    private val TAG = "ViewModel"
-    private var viewModelJob = Job()
-    private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
     var items: MutableLiveData<List<ShoppingItem>> = MutableLiveData()
 
@@ -28,9 +20,7 @@ class ShoppingListViewModel(
         listenToShoppingItems()
     }
 
-    private fun listenToShoppingItems() {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
+     private fun listenToShoppingItems() {
                 collectionReference
                         .orderBy("name")
                         .addSnapshotListener { value, error ->
@@ -52,45 +42,30 @@ class ShoppingListViewModel(
                                 items.value = itemList
                             }
                         }
-            }
-        }
+
     }
 
-    fun onAddItem(item: ShoppingItem) {
-        uiScope.launch {
+    suspend fun onAddItem(item: ShoppingItem) {
             withContext(Dispatchers.IO) {
                 collectionReference.add(item)
             }
-        }
+
     }
 
-    fun onDeleteItem(item: ShoppingItem) {
-        uiScope.launch {
+    suspend fun onDeleteItem(item: ShoppingItem) {
+
             withContext(Dispatchers.IO) {
                 collectionReference.document(item.id).delete()
             }
-        }
+
     }
 
-    fun onUpdateItem(item: ShoppingItem) {
-        uiScope.launch {
+    suspend fun onUpdateItem(item: ShoppingItem) {
+
             withContext(Dispatchers.IO) {
                 collectionReference.document(item.id).set(item)
             }
-        }
-    }
 
-    fun deleteCheckedItems() {
-        for (item in items.value!!) {
-            when (item.acquired) {
-                true -> onDeleteItem(item)
-            }
-        }
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelJob.cancel()
     }
 
 }
