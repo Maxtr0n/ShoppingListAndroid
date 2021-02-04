@@ -7,11 +7,11 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "shopping_items_table")
 data class ShoppingItem(
         @PrimaryKey(autoGenerate = false)
-        val id: String = "",
+        var id: String = "",
 
-        val name: String? = null,
+        var name: String? = null,
 
-        val acquired: Boolean = false
+        var acquired: Boolean = false
 ) {
 
 }
