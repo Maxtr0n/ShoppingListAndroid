@@ -21,9 +21,8 @@ class ShoppingListService {
         firebaseDb.firestoreSettings = settings
     }*/
 
-    fun getItems(): List<ShoppingItem> {
+    /*fun getItems(): List<ShoppingItem> {
         val list = mutableListOf<ShoppingItem>()
-        var networkShoppingItem: NetworkShoppingItem
         var shoppingItem: ShoppingItem
 
         collectionReference
@@ -36,13 +35,13 @@ class ShoppingListService {
                     }
                 }
 
-        Log.d(TAG, "Retrieved items from server: $list")
         return list
-    }
+    }*/
+
+
 
     fun addItem(item: ShoppingItem) {
-        val networkShoppingItem = NetworkShoppingItem(name = item.name, acquired = item.acquired)
-        collectionReference.add(networkShoppingItem)
+        collectionReference.add(item)
                 .addOnSuccessListener {
                     Log.d(TAG, "Uploaded item to server: "+ item.name)
 
@@ -57,8 +56,7 @@ class ShoppingListService {
     }
 
     fun updateItem(item: ShoppingItem) {
-        val networkShoppingItem = NetworkShoppingItem(name = item.name, acquired = item.acquired)
-        collectionReference.document(item.id).set(networkShoppingItem)
+        collectionReference.document(item.id).set(item)
                 .addOnSuccessListener {
                     Log.d(TAG, "Updated item on server: "+ item.name)
 

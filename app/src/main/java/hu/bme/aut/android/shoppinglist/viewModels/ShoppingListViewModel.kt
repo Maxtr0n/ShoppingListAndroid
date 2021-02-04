@@ -29,8 +29,6 @@ class ShoppingListViewModel(
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
 
-
-
     init {
         refreshDataFromRepository()
     }
