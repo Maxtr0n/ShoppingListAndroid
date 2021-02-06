@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.Navigation
+import androidx.navigation.findNavController
 import hu.bme.aut.android.shoppinglist.databinding.FragmentListBinding
 import hu.bme.aut.android.shoppinglist.databinding.FragmentLoginBinding
 
@@ -25,7 +27,9 @@ class LoginFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
 
-
+        binding.btnLogin.setOnClickListener(
+                Navigation.createNavigateOnClickListener(R.id.action_loginFragment_to_listFragment)
+        )
 
         return binding.root
     }
