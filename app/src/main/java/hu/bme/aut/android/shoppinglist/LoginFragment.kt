@@ -27,9 +27,9 @@ class LoginFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_login, container, false)
 
-        binding.btnLogin.setOnClickListener(
+        /*binding.btnLogin.setOnClickListener(
                 Navigation.createNavigateOnClickListener(R.id.action_loginFragment_to_listFragment)
-        )
+        )*/
 
         return binding.root
     }

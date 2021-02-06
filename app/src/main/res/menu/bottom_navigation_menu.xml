@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/myListsFragment"
+        android:icon="@drawable/ic_list_24"
+        android:title="@string/list_im" />
+    <item
+        android:id="@+id/newListFragment"
+        android:icon="@drawable/ic_baseline_add_24"
+        android:title="@string/j_lista" />
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:title="@string/profil" />
+</menu>

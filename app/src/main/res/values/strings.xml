@@ -16,4 +16,7 @@
     <string name="are_you_sure_to_remove">Biztosan törlöd a terméket?</string>
     <string name="adj_hozz_egy_term_ket_a_list_hoz">Adj hozzá egy terméket a listához</string>
     <string name="login">Login</string>
+    <string name="list_im">Listáim</string>
+    <string name="j_lista">Új lista</string>
+    <string name="profil">Profil</string>
 </resources>
