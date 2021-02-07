@@ -18,5 +18,10 @@
     <string name="login">Login</string>
     <string name="list_im">Listáim</string>
     <string name="j_lista">Új lista</string>
+    <string name="bejelentkezes">Bejelentkezés</string>
+    <string name="lista">Lista</string>
+    <string name="uj_lista">Új lista</string>
     <string name="profil">Profil</string>
+    <string name="listaim">Listáim</string>
+    <string name="logout">Logout</string>
 </resources>

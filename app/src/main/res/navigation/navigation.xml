@@ -3,17 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/myListsFragment">
 
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="hu.bme.aut.android.shoppinglist.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/listFragment"
         android:name="hu.bme.aut.android.shoppinglist.ListFragment"
-        android:label="ListFragment" >
+        android:label="@string/lista"
+        tools:layout="@layout/fragment_list">
         <argument
             android:name="listId"
             app:argType="string" />
@@ -21,20 +17,27 @@
     <fragment
         android:id="@+id/newListFragment"
         android:name="hu.bme.aut.android.shoppinglist.NewListFragment"
-        android:label="fragment_new_list"
-        tools:layout="@layout/fragment_new_list" />
+        android:label="@string/uj_lista"
+        tools:layout="@layout/fragment_new_list" >
+        <action
+            android:id="@+id/action_newListFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="hu.bme.aut.android.shoppinglist.ProfileFragment"
-        android:label="fragment_profile"
+        android:label="@string/profil"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/myListsFragment"
         android:name="hu.bme.aut.android.shoppinglist.MyListsFragment"
-        android:label="fragment_my_lists"
+        android:label="@string/listaim"
         tools:layout="@layout/fragment_my_lists" >
         <action
             android:id="@+id/action_myListsFragment_to_listFragment"
             app:destination="@id/listFragment" />
+        <action
+            android:id="@+id/action_myListsFragment_to_newListFragment"
+            app:destination="@id/newListFragment" />
     </fragment>
 </navigation>

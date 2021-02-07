@@ -1,45 +1,52 @@
 package hu.bme.aut.android.shoppinglist
 
+import android.opengl.Visibility
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.NavHost
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.input.getInputField
-import com.afollestad.materialdialogs.input.input
-import com.google.firebase.FirebaseApp
-import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import hu.bme.aut.android.shoppinglist.adapters.ShoppingListAdapter
-import hu.bme.aut.android.shoppinglist.adapters.ShoppingListListener
-import hu.bme.aut.android.shoppinglist.database.ShoppingItem
+import com.google.firebase.auth.FirebaseAuth
 import hu.bme.aut.android.shoppinglist.databinding.ActivityMainBinding
-import hu.bme.aut.android.shoppinglist.viewModels.ShoppingListViewModel
-import hu.bme.aut.android.shoppinglist.viewModels.ShoppingListViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        val navController = this.findNavController(R.id.nav_host_fragment)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.myNavHostFragment) as NavHost
+        val navController = navHostFragment.navController
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when(destination.id) {
+                R.id.listFragment -> hideBottomNavigation()
+                else -> showBottomNavigation()
+            }
+        }
+
         NavigationUI.setupActionBarWithNavController(this, navController)
+        val bottomNavigationView = binding.bottomNavigation
+        NavigationUI.setupWithNavController(bottomNavigationView, navController)
+
+    }
+
+    private fun showBottomNavigation() {
+        binding.bottomNavigation.visibility = View.VISIBLE
+    }
+
+    private fun hideBottomNavigation() {
+        binding.bottomNavigation.visibility = View.GONE
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navController = this.findNavController(R.id.nav_host_fragment)
+        val navController = this.findNavController(R.id.myNavHostFragment)
         return navController.navigateUp()
     }
 }
