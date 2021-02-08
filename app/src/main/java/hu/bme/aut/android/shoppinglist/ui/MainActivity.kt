@@ -1,20 +1,13 @@
-package hu.bme.aut.android.shoppinglist
+package hu.bme.aut.android.shoppinglist.ui
 
-import android.app.Activity
-import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
-import androidx.navigation.NavHost
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
-import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.IdpResponse
-import com.google.firebase.auth.FirebaseAuth
+import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

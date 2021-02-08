@@ -1,7 +1,8 @@
-package hu.bme.aut.android.shoppinglist
+package hu.bme.aut.android.shoppinglist.ui
 
 import android.content.Context
 import android.os.Bundle
+import android.transition.TransitionManager
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -10,13 +11,16 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
+import com.google.android.material.transition.platform.MaterialFade
 import com.google.firebase.analytics.FirebaseAnalytics
+import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.adapters.ShoppingListAdapter
 import hu.bme.aut.android.shoppinglist.adapters.ShoppingListListener
 import hu.bme.aut.android.shoppinglist.database.ShoppingItem
@@ -41,11 +45,14 @@ class ListFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list, container, false)
-        analytics = FirebaseAnalytics.getInstance(requireContext())
         fragmentContext = requireContext()
+        analytics = FirebaseAnalytics.getInstance(fragmentContext)
+        val args : ListFragmentArgs by navArgs()
+
+
 
         val application = requireActivity().application
-        val shoppingListViewModelFactory = ShoppingListViewModelFactory(application)
+        val shoppingListViewModelFactory = ShoppingListViewModelFactory(application, args.listId)
         val shoppingListViewModel = ViewModelProvider(this, shoppingListViewModelFactory).get(ShoppingListViewModel::class.java)
         binding.shoppingListViewModel = shoppingListViewModel
 
@@ -60,10 +67,18 @@ class ListFragment : Fragment() {
         shoppingListViewModel.items.observe(viewLifecycleOwner, Observer { items ->
             //update UI
             if(items.isEmpty()){
+                val materialFade = MaterialFade().apply {
+                    duration = 150L
+                }
+                TransitionManager.beginDelayedTransition(container, materialFade)
                 binding.tvEmpty.visibility = View.VISIBLE
                 binding.rvShoppingItems.visibility = View.INVISIBLE
             }
             else {
+                val materialFade = MaterialFade().apply {
+                    duration = 84L
+                }
+                TransitionManager.beginDelayedTransition(container, materialFade)
                 binding.tvEmpty.visibility = View.INVISIBLE
                 binding.rvShoppingItems.visibility = View.VISIBLE
             }
@@ -84,13 +99,13 @@ class ListFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(rvShoppingItem)
 
 
-        initFab(shoppingListViewModel)
-        initBuyButton(shoppingListViewModel)
+        initFab(shoppingListViewModel, container)
+        initBuyButton(shoppingListViewModel, container)
 
         return binding.root
     }
 
-    private fun initBuyButton(shoppingListViewModel: ShoppingListViewModel) {
+    private fun initBuyButton(shoppingListViewModel: ShoppingListViewModel, container: ViewGroup?) {
         val btnBuy = binding.btnBuy
         btnBuy.setOnClickListener {
             val dialog = MaterialDialog(requireContext()).show {
@@ -103,7 +118,7 @@ class ListFragment : Fragment() {
         }
     }
 
-    private fun initFab(shoppingListViewModel: ShoppingListViewModel) {
+    private fun initFab(shoppingListViewModel: ShoppingListViewModel, container: ViewGroup?) {
         val fab = binding.fabAdd
         fab.setOnClickListener {
             val dialog = MaterialDialog(requireContext())

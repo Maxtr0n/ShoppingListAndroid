@@ -28,4 +28,5 @@
     <string name="sikertelen_bejelentkezes">Sikertelen bejelentkezés</string>
     <string name="nincs_internet">Nincs elérhető internetkapcsolat</string>
     <string name="unkwown_error">Ismeretlen hiba</string>
+    <string name="kijelentkezés">Kijelentkezés</string>
 </resources>

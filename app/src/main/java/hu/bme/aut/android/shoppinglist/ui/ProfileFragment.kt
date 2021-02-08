@@ -1,4 +1,4 @@
-package hu.bme.aut.android.shoppinglist
+package hu.bme.aut.android.shoppinglist.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +9,8 @@ import androidx.databinding.DataBindingUtil
 import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.MaterialFadeThrough
+import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
@@ -18,6 +20,7 @@ class ProfileFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        enterTransition = MaterialFadeThrough()
     }
 
     override fun onCreateView(
@@ -36,7 +39,7 @@ class ProfileFragment : Fragment() {
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
                             val navController = findNavController()
-                            navController.navigate(R.id.action_profileFragment_to_welcomeFragment)
+                            navController.navigate(ProfileFragmentDirections.actionProfileFragmentToWelcomeFragment())
                         } else {
                             Snackbar.make(view, getString(R.string.kijelentkezes_sikertelebn), Snackbar.LENGTH_LONG).show()
                         }

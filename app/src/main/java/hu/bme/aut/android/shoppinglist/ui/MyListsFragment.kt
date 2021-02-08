@@ -1,9 +1,6 @@
-package hu.bme.aut.android.shoppinglist
+package hu.bme.aut.android.shoppinglist.ui
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -13,9 +10,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import com.firebase.ui.auth.AuthUI
-import com.firebase.ui.auth.IdpResponse
-import com.google.firebase.auth.FirebaseAuth
+import com.google.android.material.transition.MaterialFadeThrough
+import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.databinding.FragmentMyListsBinding
 import hu.bme.aut.android.shoppinglist.viewModels.LoginViewModel
 
@@ -34,6 +30,7 @@ class MyListsFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        enterTransition = MaterialFadeThrough()
     }
 
     override fun onCreateView(
@@ -43,21 +40,16 @@ class MyListsFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_lists, container, false)
 
+        navController = findNavController()
+
         binding.tvText.setOnClickListener(
-                Navigation.createNavigateOnClickListener(R.id.action_myListsFragment_to_listFragment)
+                Navigation.createNavigateOnClickListener(MyListsFragmentDirections.actionMyListsFragmentToListFragment("items"))
         )
 
 
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        navController = findNavController()
-
-
-    }
 
 
 }

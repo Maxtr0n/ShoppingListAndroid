@@ -1,4 +1,4 @@
-package hu.bme.aut.android.shoppinglist
+package hu.bme.aut.android.shoppinglist.ui
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,16 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
-import com.firebase.ui.auth.AuthUI
-import hu.bme.aut.android.shoppinglist.databinding.FragmentNewListBinding
-import hu.bme.aut.android.shoppinglist.viewModels.LoginViewModel
+import hu.bme.aut.android.shoppinglist.R
+import hu.bme.aut.android.shoppinglist.databinding.FragmentAboutBinding
 
 
-class NewListFragment : Fragment() {
+class AboutFragment : Fragment() {
 
-    private lateinit var binding: FragmentNewListBinding
-
+    private lateinit var binding: FragmentAboutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +24,11 @@ class NewListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_list, container, false)
-
+        binding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_about, container, false
+        )
         return binding.root
     }
-
 
 
 }

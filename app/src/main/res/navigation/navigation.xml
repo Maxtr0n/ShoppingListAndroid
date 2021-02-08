@@ -7,16 +7,17 @@
 
     <fragment
         android:id="@+id/listFragment"
-        android:name="hu.bme.aut.android.shoppinglist.ListFragment"
+        android:name="hu.bme.aut.android.shoppinglist.ui.ListFragment"
         android:label="@string/lista"
         tools:layout="@layout/fragment_list">
         <argument
             android:name="listId"
-            app:argType="string" />
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
     <fragment
         android:id="@+id/newListFragment"
-        android:name="hu.bme.aut.android.shoppinglist.NewListFragment"
+        android:name="hu.bme.aut.android.shoppinglist.ui.NewListFragment"
         android:label="@string/uj_lista"
         tools:layout="@layout/fragment_new_list" >
         <action
@@ -25,7 +26,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="hu.bme.aut.android.shoppinglist.ProfileFragment"
+        android:name="hu.bme.aut.android.shoppinglist.ui.ProfileFragment"
         android:label="@string/profil"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -36,19 +37,21 @@
     </fragment>
     <fragment
         android:id="@+id/myListsFragment"
-        android:name="hu.bme.aut.android.shoppinglist.MyListsFragment"
+        android:name="hu.bme.aut.android.shoppinglist.ui.MyListsFragment"
         android:label="@string/listaim"
         tools:layout="@layout/fragment_my_lists" >
         <action
             android:id="@+id/action_myListsFragment_to_listFragment"
-            app:destination="@id/listFragment" />
+            app:destination="@id/listFragment">
+            <argument android:name="listId" />
+        </action>
         <action
             android:id="@+id/action_myListsFragment_to_newListFragment"
             app:destination="@id/newListFragment" />
     </fragment>
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="hu.bme.aut.android.shoppinglist.WelcomeFragment"
+        android:name="hu.bme.aut.android.shoppinglist.ui.WelcomeFragment"
         android:label="Bevásárló Lista"
         tools:layout="@layout/fragment_welcome">
         <action
