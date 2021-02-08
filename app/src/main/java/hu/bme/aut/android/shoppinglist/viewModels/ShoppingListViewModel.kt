@@ -12,13 +12,13 @@ import hu.bme.aut.android.shoppinglist.database.ShoppingItem
 import kotlinx.coroutines.*
 
 class ShoppingListViewModel(
-        application: Application, collectionName: String
+        application: Application, listId: String
 ) : AndroidViewModel(application) {
 
     private val firebaseDb = Firebase.firestore
-    private val collectionReference = firebaseDb.collection(collectionName)
+    private val collectionReference = firebaseDb.collection("lists").document(listId).collection("items")
 
-    private val TAG = "ViewModel"
+    private val TAG = "ShoppingListViewModel"
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 

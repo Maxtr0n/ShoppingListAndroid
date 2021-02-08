@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import hu.bme.aut.android.shoppinglist.database.ShoppingItem
-import hu.bme.aut.android.shoppinglist.databinding.ListItemBinding
+import hu.bme.aut.android.shoppinglist.databinding.ShoppingListItemBinding
 
 
-class ShoppingListAdapter(private val clickListener: ShoppingListListener) : ListAdapter<ShoppingItem, ShoppingListAdapter.ViewHolder>(ShoppingListDiffCallback()) {
+class ShoppingItemListAdapter(private val clickListener: ShoppingListListener) : ListAdapter<ShoppingItem, ShoppingItemListAdapter.ViewHolder>(ShoppingListDiffCallback()) {
 
-    class ViewHolder private constructor(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder private constructor(val binding: ShoppingListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ShoppingItem, clickListener: ShoppingListListener){
             binding.item = item
@@ -22,7 +22,7 @@ class ShoppingListAdapter(private val clickListener: ShoppingListListener) : Lis
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ListItemBinding.inflate(layoutInflater, parent, false)
+                val binding = ShoppingListItemBinding.inflate(layoutInflater, parent, false)
 
                 return ViewHolder(binding)
             }

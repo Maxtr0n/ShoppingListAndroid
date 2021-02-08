@@ -29,4 +29,5 @@
     <string name="nincs_internet">Nincs elérhető internetkapcsolat</string>
     <string name="unkwown_error">Ismeretlen hiba</string>
     <string name="kijelentkezés">Kijelentkezés</string>
+    <string name="subscribe_to_a_list">Hozz létre egy új listát, vagy iratkozz fel egy meglévőre!</string>
 </resources>
