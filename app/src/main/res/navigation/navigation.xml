@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/welcomeFragment">
+
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="hu.bme.aut.android.shoppinglist.ListFragment"
+        android:label="@string/lista"
+        tools:layout="@layout/fragment_list">
+        <argument
+            android:name="listId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/newListFragment"
+        android:name="hu.bme.aut.android.shoppinglist.NewListFragment"
+        android:label="@string/uj_lista"
+        tools:layout="@layout/fragment_new_list" >
+        <action
+            android:id="@+id/action_newListFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="hu.bme.aut.android.shoppinglist.ProfileFragment"
+        android:label="@string/profil"
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment"
+            app:popUpTo="@id/myListsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/myListsFragment"
+        android:name="hu.bme.aut.android.shoppinglist.MyListsFragment"
+        android:label="@string/listaim"
+        tools:layout="@layout/fragment_my_lists" >
+        <action
+            android:id="@+id/action_myListsFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+        <action
+            android:id="@+id/action_myListsFragment_to_newListFragment"
+            app:destination="@id/newListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="hu.bme.aut.android.shoppinglist.WelcomeFragment"
+        android:label="Bevásárló Lista"
+        tools:layout="@layout/fragment_welcome">
+        <action
+            android:id="@+id/action_welcomeFragment_to_myListsFragment"
+            app:destination="@id/myListsFragment"
+            app:popUpTo="@id/welcomeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

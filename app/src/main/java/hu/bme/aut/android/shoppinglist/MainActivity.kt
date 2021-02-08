@@ -1,115 +1,57 @@
 package hu.bme.aut.android.shoppinglist
 
+import android.app.Activity
+import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
-import android.view.KeyEvent
+import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.input.getInputField
-import com.afollestad.materialdialogs.input.input
-import com.google.firebase.analytics.FirebaseAnalytics
-import hu.bme.aut.android.shoppinglist.adapters.ShoppingListAdapter
-import hu.bme.aut.android.shoppinglist.adapters.ShoppingListListener
-import hu.bme.aut.android.shoppinglist.database.ShoppingItem
+import androidx.navigation.NavController
+import androidx.navigation.NavHost
+import androidx.navigation.findNavController
+import androidx.navigation.ui.NavigationUI
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.IdpResponse
+import com.google.firebase.auth.FirebaseAuth
 import hu.bme.aut.android.shoppinglist.databinding.ActivityMainBinding
-import hu.bme.aut.android.shoppinglist.viewModels.ShoppingListViewModel
-import hu.bme.aut.android.shoppinglist.viewModels.ShoppingListViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var analytics: FirebaseAnalytics
+    private lateinit var navController: NavController
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        analytics = FirebaseAnalytics.getInstance(this)
+        navController = this.findNavController(R.id.myNavHostFragment)
 
-        val application = requireNotNull(this).application
-        val shoppingListViewModelFactory = ShoppingListViewModelFactory(application)
-        val shoppingListViewModel = ViewModelProvider(this, shoppingListViewModelFactory).get(ShoppingListViewModel::class.java)
-        binding.shoppingListViewModel = shoppingListViewModel
-
-        val rvShoppingItem = binding.rvShoppingItems
-        val shoppingListAdapter = ShoppingListAdapter(ShoppingListListener { item ->
-            val newItem = ShoppingItem(id = item.id, name = item.name, acquired = !item.acquired)
-            shoppingListViewModel.onUpdateItem(newItem)
-        })
-        rvShoppingItem.adapter = shoppingListAdapter
-        rvShoppingItem.layoutManager = LinearLayoutManager(this)
-
-        shoppingListViewModel.items.observe(this, Observer { items ->
-            //update UI
-            if(items.isEmpty()){
-                binding.tvEmpty.visibility = View.VISIBLE
-                binding.rvShoppingItems.visibility = View.INVISIBLE
-            }
-            else {
-                binding.tvEmpty.visibility = View.INVISIBLE
-                binding.rvShoppingItems.visibility = View.VISIBLE
-            }
-            shoppingListAdapter.submitList(items)
-        })
-
-        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                shoppingListViewModel.onDeleteItem(shoppingListAdapter.getItemAt(viewHolder.adapterPosition))
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when(destination.id) {
+                R.id.listFragment, R.id.welcomeFragment -> hideBottomNavigation()
+                else -> showBottomNavigation()
             }
         }
 
-        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        itemTouchHelper.attachToRecyclerView(rvShoppingItem)
-
-
-        initFab(shoppingListViewModel)
-        initBuyButton(shoppingListViewModel)
+        NavigationUI.setupActionBarWithNavController(this, navController)
+        val bottomNavigationView = binding.bottomNavigation
+        NavigationUI.setupWithNavController(bottomNavigationView, navController)
     }
 
-    private fun initBuyButton(shoppingListViewModel: ShoppingListViewModel) {
-        val btnBuy = binding.btnBuy
-        btnBuy.setOnClickListener {
-            val dialog = MaterialDialog(this).show {
-                message(R.string.are_you_sure)
-                positiveButton(R.string.yes) {
-                    shoppingListViewModel.deleteCheckedItems()
-                }
-                negativeButton(R.string.no)
-            }
-        }
+
+    private fun showBottomNavigation() {
+        binding.bottomNavigation.visibility = View.VISIBLE
     }
 
-    private fun initFab(shoppingListViewModel: ShoppingListViewModel) {
-        val fab = binding.fabAdd
-        fab.setOnClickListener {
-            val dialog = MaterialDialog(this)
-            dialog.show {
-                input(hintRes = R.string.rucikk_neve) { _, text ->
-                    analytics.logEvent("item_added", null)
-                    shoppingListViewModel.onAddItem(ShoppingItem(name = text.toString()))
-                }.getInputField().setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
-                    if(keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP){
-                        shoppingListViewModel.onAddItem(ShoppingItem(name = getInputField().text.toString()))
-                        dialog.dismiss()
-                        return@OnKeyListener true
-                    }
-                    false
-                })
-
-                positiveButton(R.string.add_item)
-                negativeButton(R.string.cancel)
-            }
-        }
+    private fun hideBottomNavigation() {
+        binding.bottomNavigation.visibility = View.GONE
     }
 
+    override fun onSupportNavigateUp(): Boolean {
+        navController = this.findNavController(R.id.myNavHostFragment)
+        return navController.navigateUp()
+    }
 }

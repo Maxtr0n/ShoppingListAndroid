@@ -45,27 +45,16 @@ class ShoppingListRepository {
 
     }
 
-    suspend fun onAddItem(item: ShoppingItem) {
-            withContext(Dispatchers.IO) {
+    fun onAddItem(item: ShoppingItem) {
                 collectionReference.add(item)
-            }
-
     }
 
-    suspend fun onDeleteItem(item: ShoppingItem) {
-
-            withContext(Dispatchers.IO) {
+    fun onDeleteItem(item: ShoppingItem) {
                 collectionReference.document(item.id).delete()
-            }
-
     }
 
-    suspend fun onUpdateItem(item: ShoppingItem) {
-
-            withContext(Dispatchers.IO) {
+    fun onUpdateItem(item: ShoppingItem) {
                 collectionReference.document(item.id).set(item)
-            }
-
     }
 
 }
