@@ -24,4 +24,8 @@
     <string name="profil">Profil</string>
     <string name="listaim">Listáim</string>
     <string name="logout">Logout</string>
+    <string name="kijelentkezes_sikertelebn">Kijelentkezés sikertelen</string>
+    <string name="sikertelen_bejelentkezes">Sikertelen bejelentkezés</string>
+    <string name="nincs_internet">Nincs elérhető internetkapcsolat</string>
+    <string name="unkwown_error">Ismeretlen hiba</string>
 </resources>

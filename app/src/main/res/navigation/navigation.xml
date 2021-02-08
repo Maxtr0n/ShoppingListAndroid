@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigation"
-    app:startDestination="@id/myListsFragment">
+    app:startDestination="@id/welcomeFragment">
 
     <fragment
         android:id="@+id/listFragment"
@@ -27,7 +27,13 @@
         android:id="@+id/profileFragment"
         android:name="hu.bme.aut.android.shoppinglist.ProfileFragment"
         android:label="@string/profil"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_welcomeFragment"
+            app:destination="@id/welcomeFragment"
+            app:popUpTo="@id/myListsFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/myListsFragment"
         android:name="hu.bme.aut.android.shoppinglist.MyListsFragment"
@@ -39,5 +45,16 @@
         <action
             android:id="@+id/action_myListsFragment_to_newListFragment"
             app:destination="@id/newListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="hu.bme.aut.android.shoppinglist.WelcomeFragment"
+        android:label="Bevásárló Lista"
+        tools:layout="@layout/fragment_welcome">
+        <action
+            android:id="@+id/action_welcomeFragment_to_myListsFragment"
+            app:destination="@id/myListsFragment"
+            app:popUpTo="@id/welcomeFragment"
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

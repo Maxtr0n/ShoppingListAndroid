@@ -6,12 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import com.firebase.ui.auth.AuthUI
 import hu.bme.aut.android.shoppinglist.databinding.FragmentNewListBinding
+import hu.bme.aut.android.shoppinglist.viewModels.LoginViewModel
 
 
 class NewListFragment : Fragment() {
 
     private lateinit var binding: FragmentNewListBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,5 +31,7 @@ class NewListFragment : Fragment() {
 
         return binding.root
     }
+
+
 
 }
