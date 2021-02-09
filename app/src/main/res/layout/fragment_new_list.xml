@@ -8,11 +8,11 @@
         android:layout_height="match_parent"
         tools:context=".ui.NewListFragment">
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New List fragment"
-            android:textSize="30sp"
+            android:text="@string/j_lista_hozz_ad_sa"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

@@ -22,6 +22,10 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         navController = this.findNavController(R.id.myNavHostFragment)
 
+        NavigationUI.setupActionBarWithNavController(this, navController)
+        val bottomNavigationView = binding.bottomNavigation
+        NavigationUI.setupWithNavController(bottomNavigationView, navController)
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {
                 R.id.listFragment, R.id.welcomeFragment -> hideBottomNavigation()
@@ -29,9 +33,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        NavigationUI.setupActionBarWithNavController(this, navController)
-        val bottomNavigationView = binding.bottomNavigation
-        NavigationUI.setupWithNavController(bottomNavigationView, navController)
+
     }
 
 

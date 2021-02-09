@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.platform.MaterialFade
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
 import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.adapters.MyListsAdapter
 import hu.bme.aut.android.shoppinglist.adapters.MyListsListener
@@ -37,10 +38,11 @@ class MyListsFragment : Fragment() {
     private lateinit var binding: FragmentMyListsBinding
     private lateinit var navController: NavController
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        auth = FirebaseAuth.getInstance()
         enterTransition = MaterialFadeThrough()
     }
 
@@ -53,6 +55,11 @@ class MyListsFragment : Fragment() {
         navController = findNavController()
         fragmentContext = requireContext()
         analytics = FirebaseAnalytics.getInstance(fragmentContext)
+
+
+        if(auth.currentUser != null) {
+            navController.navigate(MyListsFragmentDirections.actionMyListsFragmentToWelcomeFragment())
+        }
 
         val application = requireActivity().application
         val mainViewModelFactory = MainViewModelFactory(application)

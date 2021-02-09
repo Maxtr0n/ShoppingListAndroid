@@ -30,4 +30,6 @@
     <string name="unkwown_error">Ismeretlen hiba</string>
     <string name="kijelentkezés">Kijelentkezés</string>
     <string name="subscribe_to_a_list">Hozz létre egy új listát, vagy iratkozz fel egy meglévőre!</string>
+    <string name="j_lista_hozz_ad_sa">Új lista hozzáadása</string>
+    <string name="uj_lista_neve">Új lista neve</string>
 </resources>

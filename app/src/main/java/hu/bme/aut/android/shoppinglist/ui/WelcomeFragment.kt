@@ -32,7 +32,7 @@ class WelcomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        auth = FirebaseAuth.getInstance()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -45,10 +45,6 @@ class WelcomeFragment : Fragment() {
             launchSignInFlow()
         }
 
-        auth = FirebaseAuth.getInstance()
-        if(auth.currentUser != null) {
-            navController.navigate(WelcomeFragmentDirections.actionWelcomeFragmentToMyListsFragment())
-        }
         return binding.root
     }
 
