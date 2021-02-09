@@ -42,7 +42,6 @@ class MyListsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        auth = FirebaseAuth.getInstance()
         enterTransition = MaterialFadeThrough()
     }
 
@@ -55,9 +54,9 @@ class MyListsFragment : Fragment() {
         navController = findNavController()
         fragmentContext = requireContext()
         analytics = FirebaseAnalytics.getInstance(fragmentContext)
+        auth = FirebaseAuth.getInstance()
 
-
-        if(auth.currentUser != null) {
+        if(auth.currentUser == null) {
             navController.navigate(MyListsFragmentDirections.actionMyListsFragmentToWelcomeFragment())
         }
 
