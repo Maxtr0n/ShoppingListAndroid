@@ -6,7 +6,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.navigateUp
 import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.databinding.ActivityMainBinding
 
@@ -14,6 +16,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +25,14 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         navController = this.findNavController(R.id.myNavHostFragment)
 
-        NavigationUI.setupActionBarWithNavController(this, navController)
+        appBarConfiguration = AppBarConfiguration
+                .Builder(
+                        R.id.myListsFragment,
+                        R.id.profileFragment,
+                        R.id.newListFragment, 
+                        R.id.welcomeFragment)
+                .build()
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         val bottomNavigationView = binding.bottomNavigation
         NavigationUI.setupWithNavController(bottomNavigationView, navController)
 
@@ -32,8 +42,6 @@ class MainActivity : AppCompatActivity() {
                 else -> showBottomNavigation()
             }
         }
-
-
     }
 
 
@@ -47,6 +55,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
         navController = this.findNavController(R.id.myNavHostFragment)
-        return navController.navigateUp()
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }

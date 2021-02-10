@@ -22,7 +22,8 @@
         tools:layout="@layout/fragment_new_list" >
         <action
             android:id="@+id/action_newListFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
@@ -47,7 +48,8 @@
         </action>
         <action
             android:id="@+id/action_myListsFragment_to_newListFragment"
-            app:destination="@id/newListFragment" />
+            app:destination="@id/newListFragment"
+            app:popUpToInclusive="false" />
         <action
             android:id="@+id/action_myListsFragment_to_welcomeFragment"
             app:destination="@id/welcomeFragment"
