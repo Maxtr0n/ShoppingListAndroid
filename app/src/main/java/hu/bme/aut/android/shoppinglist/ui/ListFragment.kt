@@ -123,14 +123,7 @@ class ListFragment : Fragment() {
             dialog.show {
                 input(hintRes = R.string.rucikk_neve) { _, text ->
                     shoppingListViewModel.onAddItem(ShoppingItem(name = text.toString()))
-                }.getInputField().setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
-                    if(keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP){
-                        shoppingListViewModel.onAddItem(ShoppingItem(name = getInputField().text.toString()))
-                        dialog.dismiss()
-                        return@OnKeyListener true
-                    }
-                    false
-                })
+                }
 
                 positiveButton(R.string.add_item)
                 negativeButton(R.string.cancel)

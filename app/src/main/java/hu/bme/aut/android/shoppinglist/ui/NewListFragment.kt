@@ -1,5 +1,6 @@
 package hu.bme.aut.android.shoppinglist.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
@@ -7,18 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.google.android.material.transition.MaterialFadeThrough
 import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.database.ShoppingItem
+import hu.bme.aut.android.shoppinglist.database.ShoppingList
 import hu.bme.aut.android.shoppinglist.databinding.FragmentNewListBinding
+import hu.bme.aut.android.shoppinglist.viewModels.MainViewModel
+import hu.bme.aut.android.shoppinglist.viewModels.MainViewModelFactory
 
 
 class NewListFragment : Fragment() {
 
+    private lateinit var mainViewModel: MainViewModel
     private lateinit var binding: FragmentNewListBinding
+    private lateinit var fragmentContext: Context
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,19 +39,18 @@ class NewListFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_new_list, container, false)
+        fragmentContext = requireContext()
+        val application = requireActivity().application
+
+        val mainViewModelFactory = MainViewModelFactory(application)
+        mainViewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
+
         binding.btnAdd.setOnClickListener {
             val dialog = MaterialDialog(requireContext())
             dialog.show {
                 input(hintRes = R.string.uj_lista_neve) { _, text ->
-                    //shoppingListViewModel.onAddItem(ShoppingItem(name = text.toString()))
-                }.getInputField().setOnKeyListener(View.OnKeyListener { _, keyCode, event ->
-                    if(keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_UP){
-                        //shoppingListViewModel.onAddItem(ShoppingItem(name = getInputField().text.toString()))
-                        dialog.dismiss()
-                        return@OnKeyListener true
-                    }
-                    false
-                })
+                    mainViewModel.onAddItem(ShoppingList(name = text.toString()))
+                }
 
                 positiveButton(R.string.add_item)
                 negativeButton(R.string.cancel)
