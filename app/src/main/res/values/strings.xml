@@ -32,4 +32,12 @@
     <string name="subscribe_to_a_list">Hozz létre egy új listát, vagy iratkozz fel egy meglévőre!</string>
     <string name="j_lista_hozz_ad_sa">Új lista hozzáadása</string>
     <string name="uj_lista_neve">Új lista neve</string>
+    <string name="nev">Név:</string>
+    <string name="e_mail">E-mail:</string>
+    <string name="feliratkozas_listara_text">A "Feliratkozás listára" opcióval egy már létező listára iratkozhatsz fel. Ehhez szükséged lesz a lista egyedi azonosítójára.</string>
+    <string name="uj_lista_text">Az "Új lista hozzáadása" opcióval egy teljesen új listát hozhatsz létre, amelyet ezután megoszthatsz akárkivel.</string>
+    <string name="feliratkozas_egy_listara">Feliratkozás egy listára</string>
+    <string name="lista_azonositoja">Lista azonosítója</string>
+    <string name="welcome_text">Üdvözöllek a Bevásárló Listában!</string>
+    <string name="please_sign_in_text">Kérlek jelentkezz be, hogy használhasd az alkalmazást.</string>
 </resources>

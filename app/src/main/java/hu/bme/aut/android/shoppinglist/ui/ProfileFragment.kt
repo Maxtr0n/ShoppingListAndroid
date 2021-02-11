@@ -10,12 +10,14 @@ import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialFadeThrough
+import com.google.firebase.auth.FirebaseAuth
 import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.databinding.FragmentProfileBinding
 
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +31,11 @@ class ProfileFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
+        auth = FirebaseAuth.getInstance()
+
+        binding.tvUsernameText.text = auth.currentUser?.displayName ?: ""
+        binding.tvEmailText.text = auth.currentUser?.email ?: ""
+
         return binding.root
     }
 

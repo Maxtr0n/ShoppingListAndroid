@@ -1,14 +1,12 @@
 package hu.bme.aut.android.shoppinglist.viewModels
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import hu.bme.aut.android.shoppinglist.database.ShoppingItem
+import hu.bme.aut.android.shoppinglist.models.ShoppingItem
 import kotlinx.coroutines.*
 
 class ShoppingListViewModel(

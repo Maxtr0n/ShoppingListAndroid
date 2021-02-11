@@ -2,7 +2,6 @@ package hu.bme.aut.android.shoppinglist.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +9,10 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.google.android.material.transition.MaterialFadeThrough
 import hu.bme.aut.android.shoppinglist.R
-import hu.bme.aut.android.shoppinglist.database.ShoppingItem
-import hu.bme.aut.android.shoppinglist.database.ShoppingList
+import hu.bme.aut.android.shoppinglist.models.ShoppingList
 import hu.bme.aut.android.shoppinglist.databinding.FragmentNewListBinding
 import hu.bme.aut.android.shoppinglist.viewModels.MainViewModel
 import hu.bme.aut.android.shoppinglist.viewModels.MainViewModelFactory
@@ -49,6 +46,18 @@ class NewListFragment : Fragment() {
             val dialog = MaterialDialog(requireContext())
             dialog.show {
                 input(hintRes = R.string.uj_lista_neve) { _, text ->
+                    mainViewModel.onAddItem(ShoppingList(name = text.toString()))
+                }
+
+                positiveButton(R.string.add_item)
+                negativeButton(R.string.cancel)
+            }
+        }
+
+        binding.btnSubscribe.setOnClickListener {
+            val dialog = MaterialDialog(requireContext())
+            dialog.show {
+                input(hintRes = R.string.lista_azonositoja) { _, text ->
                     mainViewModel.onAddItem(ShoppingList(name = text.toString()))
                 }
 

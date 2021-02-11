@@ -2,29 +2,36 @@ package hu.bme.aut.android.shoppinglist.viewModels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import hu.bme.aut.android.shoppinglist.database.ShoppingItem
-import hu.bme.aut.android.shoppinglist.database.ShoppingList
+import hu.bme.aut.android.shoppinglist.models.ShoppingList
+import hu.bme.aut.android.shoppinglist.models.User
 import kotlinx.coroutines.*
 
-class MainViewModel (
-application: Application
+
+class MainViewModel(
+        application: Application
 ) : AndroidViewModel(application) {
 
     private val firebaseDb = Firebase.firestore
     private val collectionReference = firebaseDb.collection("lists")
+    private val auth: FirebaseAuth
 
     private val TAG = "MainViewModel"
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
+    var authenticatedUserLiveData: MutableLiveData<User> = MutableLiveData()
     var lists: MutableLiveData<List<ShoppingList>> = MutableLiveData()
+
 
     init {
         listenToShoppingItems()
+        auth = FirebaseAuth.getInstance()
     }
 
     private fun listenToShoppingItems() {

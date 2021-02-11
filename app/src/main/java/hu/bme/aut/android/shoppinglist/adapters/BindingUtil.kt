@@ -3,8 +3,8 @@ package hu.bme.aut.android.shoppinglist.adapters
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import hu.bme.aut.android.shoppinglist.database.ShoppingItem
-import hu.bme.aut.android.shoppinglist.database.ShoppingList
+import hu.bme.aut.android.shoppinglist.models.ShoppingItem
+import hu.bme.aut.android.shoppinglist.models.ShoppingList
 
 
 @BindingAdapter("ItemName")

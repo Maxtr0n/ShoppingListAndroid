@@ -3,7 +3,6 @@ package hu.bme.aut.android.shoppinglist.ui
 import android.content.Context
 import android.os.Bundle
 import android.transition.TransitionManager
-import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,14 +15,13 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
-import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
 import com.google.android.material.transition.platform.MaterialFade
 import com.google.firebase.analytics.FirebaseAnalytics
 import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.adapters.ShoppingItemListAdapter
 import hu.bme.aut.android.shoppinglist.adapters.ShoppingListListener
-import hu.bme.aut.android.shoppinglist.database.ShoppingItem
+import hu.bme.aut.android.shoppinglist.models.ShoppingItem
 import hu.bme.aut.android.shoppinglist.databinding.FragmentListBinding
 import hu.bme.aut.android.shoppinglist.viewModels.ShoppingListViewModel
 import hu.bme.aut.android.shoppinglist.viewModels.ShoppingListViewModelFactory

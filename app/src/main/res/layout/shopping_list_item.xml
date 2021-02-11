@@ -6,7 +6,7 @@
     <data>
         <variable
             name="item"
-            type="hu.bme.aut.android.shoppinglist.database.ShoppingItem" />
+            type="hu.bme.aut.android.shoppinglist.models.ShoppingItem" />
         <variable
             name="clickListener"
             type="hu.bme.aut.android.shoppinglist.adapters.ShoppingListListener" />

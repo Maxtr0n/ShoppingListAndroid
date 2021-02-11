@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import hu.bme.aut.android.shoppinglist.database.ShoppingList
+import hu.bme.aut.android.shoppinglist.models.ShoppingList
 import hu.bme.aut.android.shoppinglist.databinding.MyListsItemBinding
 
 class MyListsAdapter (private val clickListener: MyListsListener) : ListAdapter<ShoppingList, MyListsAdapter.ViewHolder>(MyListsDiffCallback()) {

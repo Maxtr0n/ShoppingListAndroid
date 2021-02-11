@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import hu.bme.aut.android.shoppinglist.database.ShoppingItem
+import hu.bme.aut.android.shoppinglist.models.ShoppingItem
 import hu.bme.aut.android.shoppinglist.databinding.ShoppingListItemBinding
 
 
