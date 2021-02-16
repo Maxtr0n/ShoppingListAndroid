@@ -14,7 +14,7 @@ class ShoppingListViewModel(
 ) : AndroidViewModel(application) {
 
     private val firebaseDb = Firebase.firestore
-    private val collectionReference = firebaseDb.collection("lists").document(listId).collection("items")
+    private val itemsCollectionReference = firebaseDb.collection("lists").document(listId).collection("items")
 
     private val TAG = "ShoppingListViewModel"
     private var viewModelJob = Job()
@@ -29,7 +29,7 @@ class ShoppingListViewModel(
     private fun listenToShoppingItems() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                collectionReference
+                itemsCollectionReference
                         .orderBy("name")
                         .addSnapshotListener { value, error ->
                             if (error != null) {
@@ -57,7 +57,7 @@ class ShoppingListViewModel(
     fun onAddItem(item: ShoppingItem) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                collectionReference.add(item)
+                itemsCollectionReference.add(item)
             }
         }
     }
@@ -65,7 +65,7 @@ class ShoppingListViewModel(
     fun onDeleteItem(item: ShoppingItem) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                collectionReference.document(item.id).delete()
+                itemsCollectionReference.document(item.id).delete()
             }
         }
     }
@@ -73,7 +73,7 @@ class ShoppingListViewModel(
     fun onUpdateItem(item: ShoppingItem) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                collectionReference.document(item.id).set(item)
+                itemsCollectionReference.document(item.id).set(item)
             }
         }
     }

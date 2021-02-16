@@ -2,7 +2,6 @@ package hu.bme.aut.android.shoppinglist.viewModels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.ktx.firestore
@@ -18,8 +17,9 @@ class MainViewModel(
 ) : AndroidViewModel(application) {
 
     private val firebaseDb = Firebase.firestore
-    private val collectionReference = firebaseDb.collection("lists")
-    private val auth: FirebaseAuth
+    private val listsCollectionReference = firebaseDb.collection("lists")
+    private val userCollectionReference = firebaseDb.collection("users")
+    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val TAG = "MainViewModel"
     private var viewModelJob = Job()
@@ -31,13 +31,14 @@ class MainViewModel(
 
     init {
         listenToShoppingItems()
-        auth = FirebaseAuth.getInstance()
     }
+
+   
 
     private fun listenToShoppingItems() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                collectionReference
+                listsCollectionReference
                         .orderBy("name")
                         .addSnapshotListener { value, error ->
                             if (error != null) {
@@ -65,7 +66,7 @@ class MainViewModel(
     fun onAddItem(list: ShoppingList) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                collectionReference.add(list)
+                listsCollectionReference.add(list)
             }
         }
     }
@@ -73,7 +74,7 @@ class MainViewModel(
     fun onDeleteItem(list: ShoppingList) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                collectionReference.document(list.id).delete()
+                listsCollectionReference.document(list.id).delete()
             }
         }
     }
@@ -81,7 +82,7 @@ class MainViewModel(
     fun onUpdateItem(list: ShoppingList) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                collectionReference.document(list.id).set(list)
+                listsCollectionReference.document(list.id).set(list)
             }
         }
     }
