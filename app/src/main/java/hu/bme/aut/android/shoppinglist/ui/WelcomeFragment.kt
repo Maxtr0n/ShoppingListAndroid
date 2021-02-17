@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
@@ -18,6 +19,8 @@ import com.google.android.material.transition.MaterialSharedAxis
 import com.google.firebase.auth.FirebaseAuth
 import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.databinding.FragmentWelcomeBinding
+import hu.bme.aut.android.shoppinglist.viewModels.MainViewModel
+import hu.bme.aut.android.shoppinglist.viewModels.MainViewModelFactory
 
 
 class WelcomeFragment : Fragment() {
@@ -29,6 +32,7 @@ class WelcomeFragment : Fragment() {
     private lateinit var binding: FragmentWelcomeBinding
     private lateinit var auth: FirebaseAuth
     private lateinit var navController: NavController
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,8 +43,12 @@ class WelcomeFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_welcome, container, false)
         navController = findNavController()
-
         auth = FirebaseAuth.getInstance()
+
+        val application = requireActivity().application
+        val mainViewModelFactory = MainViewModelFactory(application)
+        mainViewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
+
         binding.btnLogin.setOnClickListener {
             launchSignInFlow()
         }
@@ -74,6 +82,14 @@ class WelcomeFragment : Fragment() {
         if(requestCode == SIGN_IN_RESULT_CODE) {
             val response = IdpResponse.fromResultIntent(data)
             if(resultCode == Activity.RESULT_OK) {
+                if (response != null) {
+                    if(response.isNewUser) {
+                        //viewmodel -> tegyen be uj usert a firestoreba
+                        auth.currentUser?.let { mainViewModel.addUserToFirestore(it) }
+                    }
+                    //viewmodel -> szedje le a user adatait firestore-bol
+                    auth.currentUser?.let { mainViewModel.listenToUser(it) }
+                }
                 navController.navigate(WelcomeFragmentDirections.actionWelcomeFragmentToMyListsFragment())
             } else {
                 if(response == null) {

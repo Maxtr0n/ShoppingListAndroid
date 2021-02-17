@@ -2,8 +2,10 @@ package hu.bme.aut.android.shoppinglist.viewModels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -18,30 +20,59 @@ class MainViewModel(
 
     private val firebaseDb = Firebase.firestore
     private val listsCollectionReference = firebaseDb.collection("lists")
-    private val userCollectionReference = firebaseDb.collection("users")
+    private val usersCollectionReference = firebaseDb.collection("users")
     private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val TAG = "MainViewModel"
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    var authenticatedUserLiveData: MutableLiveData<User> = MutableLiveData()
     var lists: MutableLiveData<List<ShoppingList>> = MutableLiveData()
+    var currentUser: MutableLiveData<User> = MutableLiveData()
+
 
 
     init {
         listenToShoppingItems()
     }
 
-   
+    fun createUserObject(firebaseUser: FirebaseUser): User{
+
+        return User(firebaseUser.uid, firebaseUser.displayName, firebaseUser.email)
+    }
+
+    fun addUserToFirestore(newUser: FirebaseUser) {
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                usersCollectionReference.document(newUser.uid).set(createUserObject(newUser))
+            }
+        }
+    }
+
+    fun listenToUser(user: FirebaseUser) {
+        uiScope.launch {
+            withContext(Dispatchers.IO) {
+                usersCollectionReference.document(user.uid)
+                        .addSnapshotListener { value, e ->
+                            if(e != null) {
+                                currentUser.value = null
+                            }
+
+                            if(value != null) {
+
+                            }
+                        }
+            }
+        }
+    }
 
     private fun listenToShoppingItems() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
                 listsCollectionReference
                         .orderBy("name")
-                        .addSnapshotListener { value, error ->
-                            if (error != null) {
+                        .addSnapshotListener { value, e ->
+                            if (e != null) {
                                 lists.value = null
                                 return@addSnapshotListener
                             }
