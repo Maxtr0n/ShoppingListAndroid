@@ -3,7 +3,6 @@ package hu.bme.aut.android.shoppinglist.viewModels
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -34,7 +33,7 @@ class MainViewModel(
 
 
     init {
-        listenToShoppingItems()
+        listenToShoppingLists()
     }
 
     fun createUserObject(firebaseUser: FirebaseUser): User{
@@ -69,7 +68,7 @@ class MainViewModel(
         }
     }
 
-    private fun listenToShoppingItems() {
+    private fun listenToShoppingLists() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
                 listsCollectionReference
