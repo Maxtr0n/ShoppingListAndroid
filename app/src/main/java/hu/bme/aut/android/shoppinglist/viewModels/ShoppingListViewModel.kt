@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import hu.bme.aut.android.shoppinglist.models.FirestoreShoppingItem
+import hu.bme.aut.android.shoppinglist.models.FirestoreShoppingList
 import hu.bme.aut.android.shoppinglist.models.ShoppingItem
 import kotlinx.coroutines.*
 
@@ -57,7 +59,8 @@ class ShoppingListViewModel(
     fun onAddItem(item: ShoppingItem) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                itemsCollectionReference.add(item)
+                val firestoreItem = FirestoreShoppingItem(item.name, item.acquired)
+                itemsCollectionReference.add(firestoreItem)
             }
         }
     }
@@ -73,7 +76,8 @@ class ShoppingListViewModel(
     fun onUpdateItem(item: ShoppingItem) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                itemsCollectionReference.document(item.id).set(item)
+                val firestoreItem = FirestoreShoppingItem(item.name, item.acquired)
+                itemsCollectionReference.document(item.id).set(firestoreItem)
             }
         }
     }

@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import hu.bme.aut.android.shoppinglist.models.FirestoreShoppingList
 import hu.bme.aut.android.shoppinglist.models.ShoppingList
 import hu.bme.aut.android.shoppinglist.models.User
 import kotlinx.coroutines.*
@@ -30,11 +31,6 @@ class MainViewModel(
     var lists: MutableLiveData<List<ShoppingList>> = MutableLiveData()
     var currentUser: MutableLiveData<User> = MutableLiveData()
 
-
-
-    init {
-        listenToShoppingLists()
-    }
 
     fun createUserObject(firebaseUser: FirebaseUser): User{
 
@@ -68,30 +64,28 @@ class MainViewModel(
         }
     }
 
-    private fun listenToShoppingLists() {
+    fun getShoppingLists() {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                listsCollectionReference
-                        .orderBy("name")
-                        .addSnapshotListener { value, e ->
-                            if (e != null) {
-                                lists.value = null
-                                return@addSnapshotListener
-                            }
+                for (listId in currentUser.value?.listIds!!)
+                {
+                   listsCollectionReference.document(listId).get()
+                           .addOnSuccessListener { document ->
+                               val shoppingList = document.toObject<ShoppingList>()
+                               if (shoppingList != null) {
+                                   shoppingList.id = document.id
+                                   val newList = lists.value?.toMutableList()
+                                   if (newList != null) {
+                                       newList.add(shoppingList)
+                                       lists.value = newList.toList()
+                                   }
 
-                            if (value != null) {
-                                val listOfShoppingLists: MutableList<ShoppingList> = mutableListOf()
-                                val documents = value.documents
-                                documents.forEach {
-                                    val list = it.toObject<ShoppingList>()
-                                    if (list != null) {
-                                        list.id = it.id
-                                        listOfShoppingLists.add(list)
-                                    }
-                                }
-                                lists.value = listOfShoppingLists
-                            }
-                        }
+                               }
+                           }
+                           .addOnFailureListener{ exception ->
+                               Log.d(TAG, "Request failed ", exception)
+                           }
+                }
             }
         }
     }
@@ -99,7 +93,8 @@ class MainViewModel(
     fun onAddItem(list: ShoppingList) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                listsCollectionReference.add(list)
+                val firestoreList = FirestoreShoppingList(list.name)
+                listsCollectionReference.add(firestoreList)
             }
         }
     }
@@ -115,7 +110,8 @@ class MainViewModel(
     fun onUpdateItem(list: ShoppingList) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                listsCollectionReference.document(list.id).set(list)
+                val firestoreList = FirestoreShoppingList(list.name)
+                listsCollectionReference.document(list.id).set(firestoreList)
             }
         }
     }
