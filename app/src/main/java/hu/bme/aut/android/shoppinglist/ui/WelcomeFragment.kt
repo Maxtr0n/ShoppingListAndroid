@@ -88,7 +88,7 @@ class WelcomeFragment : Fragment() {
                         auth.currentUser?.let { mainViewModel.addUserToFirestore(it) }
                     }
                     //viewmodel -> szedje le a user adatait firestore-bol
-                    auth.currentUser?.let { mainViewModel.listenToUser(it) }
+                    auth.currentUser?.let { mainViewModel.getUserFromFireStore(it) }
                 }
                 navController.navigate(WelcomeFragmentDirections.actionWelcomeFragmentToMyListsFragment())
             } else {

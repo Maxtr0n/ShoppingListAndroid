@@ -1,6 +1,7 @@
 package hu.bme.aut.android.shoppinglist.viewModels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -49,18 +50,20 @@ class MainViewModel(
         }
     }
 
-    fun listenToUser(user: FirebaseUser) {
+    fun getUserFromFireStore(firebaseUser: FirebaseUser) {
         uiScope.launch {
             withContext(Dispatchers.IO) {
-                usersCollectionReference.document(user.uid)
-                        .addSnapshotListener { value, e ->
-                            if(e != null) {
-                                currentUser.value = null
+                usersCollectionReference.document(firebaseUser.uid).collection("listIds").get()
+                        .addOnSuccessListener { documents ->
+                            val user = createUserObject(firebaseUser)
+                            for (document in documents) {
+                                user.listIds.add(document.id)
                             }
+                            currentUser.value = user;
+                        }
 
-                            if(value != null) {
-
-                            }
+                        .addOnFailureListener { exception ->
+                            Log.d(TAG, "Request failed ", exception)
                         }
             }
         }
