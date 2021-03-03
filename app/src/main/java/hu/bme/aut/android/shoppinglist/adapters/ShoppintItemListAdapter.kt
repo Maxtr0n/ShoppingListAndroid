@@ -11,12 +11,20 @@ import hu.bme.aut.android.shoppinglist.databinding.ShoppingListItemBinding
 
 class ShoppingItemListAdapter(private val clickListener: ShoppingListListener) : ListAdapter<ShoppingItem, ShoppingItemListAdapter.ViewHolder>(ShoppingListDiffCallback()) {
 
+    var onItemLongPress: ((ShoppingItem) -> Unit)? = null
+
     class ViewHolder private constructor(val binding: ShoppingListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        var onItemLongPress: ((ShoppingItem) -> Unit)? = null
 
         fun bind(item: ShoppingItem, clickListener: ShoppingListListener){
             binding.item = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
+
+            itemView.setOnLongClickListener {
+                onItemLongPress?.invoke(item)
+                return@setOnLongClickListener true
+            }
         }
 
         companion object {
@@ -30,7 +38,11 @@ class ShoppingItemListAdapter(private val clickListener: ShoppingListListener) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder.from(parent)
+        return ViewHolder.from(parent).apply {
+            onItemLongPress = { shoppingItem ->
+                this@ShoppingItemListAdapter.onItemLongPress?.invoke(shoppingItem)
+            }
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -58,3 +70,4 @@ class ShoppingListDiffCallback : DiffUtil.ItemCallback<ShoppingItem>() {
 class ShoppingListListener(val clickListener: (item: ShoppingItem) -> Unit) {
     fun onClick(item: ShoppingItem) = clickListener(item)
 }
+

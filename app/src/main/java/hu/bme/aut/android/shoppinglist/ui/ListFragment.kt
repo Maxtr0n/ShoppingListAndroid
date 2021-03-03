@@ -11,9 +11,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.google.android.material.transition.platform.MaterialFade
@@ -57,7 +55,11 @@ class ListFragment : Fragment() {
         val shoppingListAdapter = ShoppingItemListAdapter(ShoppingListListener { item ->
             val newItem = ShoppingItem(id = item.id, name = item.name, acquired = !item.acquired)
             shoppingListViewModel.onUpdateItem(newItem)
-        })
+        }).apply {
+            onItemLongPress = { shoppingItem ->
+                onShoppingItemLongPressed(shoppingItem)
+            }
+        }
         rvShoppingItem.adapter = shoppingListAdapter
         rvShoppingItem.layoutManager = LinearLayoutManager(fragmentContext)
 
@@ -81,30 +83,19 @@ class ListFragment : Fragment() {
             shoppingListAdapter.submitList(items)
         })
 
-        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT){
-            override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                shoppingListViewModel.onDeleteItem(shoppingListAdapter.getItemAt(viewHolder.adapterPosition))
-            }
-        }
-
-        val itemTouchHelper = ItemTouchHelper(itemTouchHelperCallback)
-        itemTouchHelper.attachToRecyclerView(rvShoppingItem)
 
 
-        initFab(container)
-        initBuyButton(container)
+
+        initFab()
+        initBuyButton()
 
         return binding.root
     }
 
-    private fun initBuyButton( container: ViewGroup?) {
+    private fun initBuyButton() {
         val btnBuy = binding.btnBuy
         btnBuy.setOnClickListener {
-            val dialog = MaterialDialog(requireContext()).show {
+            MaterialDialog(requireContext()).show {
                 message(R.string.are_you_sure)
                 positiveButton(R.string.yes) {
                     shoppingListViewModel.deleteCheckedItems()
@@ -114,7 +105,7 @@ class ListFragment : Fragment() {
         }
     }
 
-    private fun initFab( container: ViewGroup?) {
+    private fun initFab() {
         val fab = binding.fabAdd
         fab.setOnClickListener {
             val dialog = MaterialDialog(requireContext())
@@ -126,6 +117,13 @@ class ListFragment : Fragment() {
                 positiveButton(R.string.add_item)
                 negativeButton(R.string.cancel)
             }
+        }
+    }
+
+    private fun onShoppingItemLongPressed(shoppingItem: ShoppingItem) {
+        val dialog = MaterialDialog(requireContext())
+        dialog.show {
+            
         }
     }
 }
