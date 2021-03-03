@@ -7,12 +7,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.afollestad.materialdialogs.LayoutMode
 import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.bottomsheets.BasicGridItem
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.bottomsheets.gridItems
+import com.afollestad.materialdialogs.customview.customView
 import com.afollestad.materialdialogs.input.input
 import com.google.android.material.transition.platform.MaterialFade
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -83,9 +89,6 @@ class ListFragment : Fragment() {
             shoppingListAdapter.submitList(items)
         })
 
-
-
-
         initFab()
         initBuyButton()
 
@@ -121,9 +124,22 @@ class ListFragment : Fragment() {
     }
 
     private fun onShoppingItemLongPressed(shoppingItem: ShoppingItem) {
-        val dialog = MaterialDialog(requireContext())
+        val items = listOf(
+                BasicGridItem(R.drawable.ic_baseline_edit_24, "Szerkesztés"),
+                BasicGridItem(R.drawable.ic_baseline_delete_24, "Törlés")
+        )
+        val dialog = MaterialDialog(requireContext(), BottomSheet(LayoutMode.WRAP_CONTENT))
         dialog.show {
-            
+            gridItems(items) { _, index, item ->
+                when(index) {
+                    0 -> ShowEditDialog()
+                    1 -> shoppingListViewModel.onDeleteItem(shoppingItem)
+                }
+            }
         }
+    }
+
+    private fun ShowEditDialog() {
+        TODO("Not yet implemented")
     }
 }
