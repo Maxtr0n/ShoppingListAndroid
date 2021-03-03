@@ -37,11 +37,6 @@ class MyListsFragment : Fragment() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var auth: FirebaseAuth
 
-    override fun onStart() {
-        super.onStart()
-        
-        mainViewModel.getShoppingLists()
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

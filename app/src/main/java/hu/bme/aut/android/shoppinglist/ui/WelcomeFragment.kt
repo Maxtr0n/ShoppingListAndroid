@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -90,7 +91,13 @@ class WelcomeFragment : Fragment() {
                     //viewmodel -> szedje le a user adatait firestore-bol
                     auth.currentUser?.let { mainViewModel.getUserFromFireStore(it) }
                 }
-                navController.navigate(WelcomeFragmentDirections.actionWelcomeFragmentToMyListsFragment())
+                mainViewModel.currentUser.observe(viewLifecycleOwner, Observer { user ->
+                    if(!user.uid.isNullOrEmpty())
+                    {
+                        navController.navigate(WelcomeFragmentDirections.actionWelcomeFragmentToMyListsFragment())
+                    }
+                })
+
             } else {
                 if(response == null) {
                     showSnackbar(R.string.sikertelen_bejelentkezes)
