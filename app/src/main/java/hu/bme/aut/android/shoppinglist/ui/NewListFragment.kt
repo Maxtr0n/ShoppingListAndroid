@@ -12,7 +12,6 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.google.android.material.transition.MaterialFadeThrough
 import hu.bme.aut.android.shoppinglist.R
-import hu.bme.aut.android.shoppinglist.models.ShoppingList
 import hu.bme.aut.android.shoppinglist.databinding.FragmentNewListBinding
 import hu.bme.aut.android.shoppinglist.viewModels.MainViewModel
 import hu.bme.aut.android.shoppinglist.viewModels.MainViewModelFactory
@@ -46,7 +45,7 @@ class NewListFragment : Fragment() {
             val dialog = MaterialDialog(requireContext())
             dialog.show {
                 input(hintRes = R.string.uj_lista_neve) { _, text ->
-                    mainViewModel.onAddItem(ShoppingList(name = text.toString()))
+                    mainViewModel.addListAndSubscribe(text.toString())
                 }
 
                 positiveButton(R.string.add_item)
@@ -58,7 +57,7 @@ class NewListFragment : Fragment() {
             val dialog = MaterialDialog(requireContext())
             dialog.show {
                 input(hintRes = R.string.lista_azonositoja) { _, text ->
-                    mainViewModel.onAddItem(ShoppingList(name = text.toString()))
+                    mainViewModel.subscribeToList(text.toString())
                 }
 
                 positiveButton(R.string.add_item)

@@ -16,13 +16,12 @@ import kotlinx.coroutines.*
 
 
 class MainViewModel(
-        application: Application
+    application: Application
 ) : AndroidViewModel(application) {
 
     private val firebaseDb = Firebase.firestore
     private val listsCollectionReference = firebaseDb.collection("lists")
     private val usersCollectionReference = firebaseDb.collection("users")
-    private val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
 
     private val TAG = "MainViewModel"
     private var viewModelJob = Job()
@@ -32,70 +31,62 @@ class MainViewModel(
     var currentUser: MutableLiveData<User> = MutableLiveData()
 
 
-    fun createUserObject(firebaseUser: FirebaseUser): User{
-
-        return User(firebaseUser.uid, firebaseUser.displayName, firebaseUser.email)
+    private fun createUserObject(firebaseUser: FirebaseUser): User {
+        val user = User(firebaseUser.uid)
+        if (firebaseUser.email != null) {
+            user.email = firebaseUser.email!!
+        }
+        if (firebaseUser.displayName != null) {
+            user.name = firebaseUser.displayName!!
+        }
+        return user
     }
 
     fun addUserToFirestore(newUser: FirebaseUser) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                usersCollectionReference.document(newUser.uid).set(createUserObject(newUser))
-            }
-        }
+        usersCollectionReference.document(newUser.uid).set(createUserObject(newUser))
     }
 
     fun getUserFromFireStore(firebaseUser: FirebaseUser) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                usersCollectionReference.document(firebaseUser.uid).collection("listIds").get()
-                        .addOnSuccessListener { documents ->
-                            val user = createUserObject(firebaseUser)
-                            for (document in documents) {
-                                user.listIds.add(document.id)
-                            }
-                            currentUser.value = user;
-                        }
-
-                        .addOnFailureListener { exception ->
-                            Log.d(TAG, "Request failed ", exception)
-                        }
+        usersCollectionReference.document(firebaseUser.uid).collection("listIds").get()
+            .addOnSuccessListener { documents ->
+                val user = createUserObject(firebaseUser)
+                for (document in documents) {
+                    user.listIds.add(document.id)
+                }
+                currentUser.value = user;
             }
-        }
+
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "Request failed ", exception)
+            }
+
     }
 
     fun getShoppingLists() {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                for (listId in currentUser.value?.listIds!!)
-                {
-                   listsCollectionReference.document(listId).get()
-                           .addOnSuccessListener { document ->
-                               val shoppingList = document.toObject<ShoppingList>()
-                               if (shoppingList != null) {
-                                   shoppingList.id = document.id
-                                   val newList = lists.value?.toMutableList()
-                                   if (newList != null) {
-                                       newList.add(shoppingList)
-                                       lists.value = newList.toList()
-                                   }
+        for (listId in currentUser.value?.listIds!!) {
+            listsCollectionReference.document(listId).get()
+                .addOnSuccessListener { document ->
+                    val shoppingList = document.toObject<ShoppingList>()
+                    if (shoppingList != null) {
+                        shoppingList.id = document.id
+                        val newList = lists.value?.toMutableList()
+                        if (newList != null) {
+                            newList.add(shoppingList)
+                            lists.value = newList.toList()
+                        }
 
-                               }
-                           }
-                           .addOnFailureListener{ exception ->
-                               Log.d(TAG, "Request failed ", exception)
-                           }
+                    }
                 }
-            }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "Request failed ", exception)
+                }
         }
     }
 
-    fun onAddItem(list: ShoppingList) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                val firestoreList = FirestoreShoppingList(list.name)
-                listsCollectionReference.add(firestoreList)
-            }
+    fun addListAndSubscribe(listName: String) {
+        val firestoreList = FirestoreShoppingList(listName)
+        listsCollectionReference.add(firestoreList).addOnSuccessListener { documentReference ->
+            subscribeToList(documentReference.id)
         }
     }
 
@@ -113,6 +104,14 @@ class MainViewModel(
                 val firestoreList = FirestoreShoppingList(list.name)
                 listsCollectionReference.document(list.id).set(firestoreList)
             }
+        }
+    }
+
+    fun subscribeToList(listId: String) {
+        val user = currentUser.value
+        if (user != null) {
+            user.listIds.add(listId)
+            usersCollectionReference.document(user.uid).set(user)
         }
     }
 

@@ -83,21 +83,16 @@ class WelcomeFragment : Fragment() {
         if(requestCode == SIGN_IN_RESULT_CODE) {
             val response = IdpResponse.fromResultIntent(data)
             if(resultCode == Activity.RESULT_OK) {
+                val user = auth.currentUser
                 if (response != null) {
                     if(response.isNewUser) {
                         //viewmodel -> tegyen be uj usert a firestoreba
-                        auth.currentUser?.let { mainViewModel.addUserToFirestore(it) }
+                        if (user != null) {
+                            mainViewModel.addUserToFirestore(user)
+                        }
                     }
-                    //viewmodel -> szedje le a user adatait firestore-bol
-                    auth.currentUser?.let { mainViewModel.getUserFromFireStore(it) }
                 }
-                mainViewModel.currentUser.observe(viewLifecycleOwner, Observer { user ->
-                    if(!user.uid.isNullOrEmpty())
-                    {
-                        navController.navigate(WelcomeFragmentDirections.actionWelcomeFragmentToMyListsFragment())
-                    }
-                })
-
+                navController.navigate(WelcomeFragmentDirections.actionWelcomeFragmentToMyListsFragment())
             } else {
                 if(response == null) {
                     showSnackbar(R.string.sikertelen_bejelentkezes)

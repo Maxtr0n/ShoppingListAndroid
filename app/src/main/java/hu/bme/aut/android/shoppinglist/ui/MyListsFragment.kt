@@ -54,13 +54,21 @@ class MyListsFragment : Fragment() {
         analytics = FirebaseAnalytics.getInstance(fragmentContext)
         auth = FirebaseAuth.getInstance()
 
-        if(auth.currentUser == null) {
-            navController.navigate(MyListsFragmentDirections.actionMyListsFragmentToWelcomeFragment())
-        }
-
         val application = requireActivity().application
         val mainViewModelFactory = MainViewModelFactory(application)
         mainViewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
+
+        if(auth.currentUser == null) {
+            navController.navigate(MyListsFragmentDirections.actionMyListsFragmentToWelcomeFragment())
+        } else {
+            mainViewModel.getUserFromFireStore(auth.currentUser!!)
+        }
+
+        mainViewModel.currentUser.observe(viewLifecycleOwner, { user ->
+            if(user != null ){
+                mainViewModel.getShoppingLists()
+            }
+        })
 
         val rvMyLists = binding.rvShoppingLists
         val myListsAdapter = MyListsAdapter(MyListsListener { list ->
@@ -88,6 +96,8 @@ class MyListsFragment : Fragment() {
             }
             myListsAdapter.submitList(lists)
         })
+
+
 
         return binding.root
     }
