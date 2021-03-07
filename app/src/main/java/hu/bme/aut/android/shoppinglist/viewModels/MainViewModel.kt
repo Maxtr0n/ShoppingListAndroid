@@ -47,12 +47,10 @@ class MainViewModel(
     }
 
     fun getUserFromFireStore(firebaseUser: FirebaseUser) {
-        usersCollectionReference.document(firebaseUser.uid).collection("listIds").get()
-            .addOnSuccessListener { documents ->
-                val user = createUserObject(firebaseUser)
-                for (document in documents) {
-                    user.listIds.add(document.id)
-                }
+        usersCollectionReference.document(firebaseUser.uid).get()
+            .addOnSuccessListener { document ->
+                val user = document.toObject<User>()
+
                 currentUser.value = user;
             }
 
@@ -73,6 +71,8 @@ class MainViewModel(
                         if (newList != null) {
                             newList.add(shoppingList)
                             lists.value = newList.toList()
+                        } else {
+                            lists.value = listOf(shoppingList)
                         }
 
                     }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
@@ -19,7 +20,7 @@ import hu.bme.aut.android.shoppinglist.viewModels.MainViewModelFactory
 
 class NewListFragment : Fragment() {
 
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var binding: FragmentNewListBinding
     private lateinit var fragmentContext: Context
 
@@ -30,6 +31,7 @@ class NewListFragment : Fragment() {
         enterTransition = MaterialFadeThrough()
     }
 
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,8 +40,7 @@ class NewListFragment : Fragment() {
         fragmentContext = requireContext()
         val application = requireActivity().application
 
-        val mainViewModelFactory = MainViewModelFactory(application)
-        mainViewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
+
 
         binding.btnAdd.setOnClickListener {
             val dialog = MaterialDialog(requireContext())
@@ -68,6 +69,12 @@ class NewListFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        binding.apply {
+            viewModel = mainViewModel
+        }
+    }
 
 }

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -34,7 +35,7 @@ class MyListsFragment : Fragment() {
     private lateinit var fragmentContext: Context
     private lateinit var binding: FragmentMyListsBinding
     private lateinit var navController: NavController
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by activityViewModels()
     private lateinit var auth: FirebaseAuth
 
 
@@ -53,19 +54,17 @@ class MyListsFragment : Fragment() {
         fragmentContext = requireContext()
         analytics = FirebaseAnalytics.getInstance(fragmentContext)
         auth = FirebaseAuth.getInstance()
-
         val application = requireActivity().application
-        val mainViewModelFactory = MainViewModelFactory(application)
-        mainViewModel = ViewModelProvider(this, mainViewModelFactory).get(MainViewModel::class.java)
 
         if(auth.currentUser == null) {
             navController.navigate(MyListsFragmentDirections.actionMyListsFragmentToWelcomeFragment())
         } else {
             mainViewModel.getUserFromFireStore(auth.currentUser!!)
+
         }
 
         mainViewModel.currentUser.observe(viewLifecycleOwner, { user ->
-            if(user != null ){
+            if(user.uid.isNotEmpty()){
                 mainViewModel.getShoppingLists()
             }
         })
@@ -97,11 +96,15 @@ class MyListsFragment : Fragment() {
             myListsAdapter.submitList(lists)
         })
 
-
-
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        binding.apply {
+            viewModel = mainViewModel
+        }
 
+    }
 }

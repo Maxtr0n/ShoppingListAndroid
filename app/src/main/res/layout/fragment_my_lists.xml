@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="shoppingListViewModel"
-            type="hu.bme.aut.android.shoppinglist.viewModels.ShoppingListViewModel" />
+            name="viewModel"
+            type="hu.bme.aut.android.shoppinglist.viewModels.MainViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
