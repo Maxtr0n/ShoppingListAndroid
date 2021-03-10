@@ -70,22 +70,6 @@ class ListFragment : Fragment() {
         rvShoppingItem.layoutManager = LinearLayoutManager(fragmentContext)
 
         shoppingListViewModel.items.observe(viewLifecycleOwner, Observer { items ->
-            //update UI
-            if(items.isEmpty()){
-                val materialFade = MaterialFade().apply {
-                    duration = 150L
-                }
-                TransitionManager.beginDelayedTransition(container, materialFade)
-                binding.tvEmpty.visibility = View.VISIBLE
-                binding.rvShoppingItems.visibility = View.INVISIBLE
-            } else {
-                val materialFade = MaterialFade().apply {
-                    duration = 84L
-                }
-                TransitionManager.beginDelayedTransition(container, materialFade)
-                binding.tvEmpty.visibility = View.INVISIBLE
-                binding.rvShoppingItems.visibility = View.VISIBLE
-            }
             shoppingListAdapter.submitList(items)
         })
 

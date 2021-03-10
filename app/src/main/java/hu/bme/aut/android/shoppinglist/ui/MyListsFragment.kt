@@ -72,21 +72,6 @@ class MyListsFragment : Fragment() {
         rvMyLists.layoutManager = LinearLayoutManager(fragmentContext)
 
         mainViewModel.lists.observe(viewLifecycleOwner, Observer { lists ->
-            if(lists.isEmpty()) {
-                val materialFade = MaterialFade().apply {
-                    duration = 150L
-                }
-                TransitionManager.beginDelayedTransition(container, materialFade)
-                binding.tvEmpty.visibility = View.INVISIBLE
-                binding.rvShoppingLists.visibility = View.INVISIBLE
-            } else {
-                val materialFade = MaterialFade().apply {
-                    duration = 84L
-                }
-                TransitionManager.beginDelayedTransition(container, materialFade)
-                binding.tvEmpty.visibility = View.INVISIBLE
-                binding.rvShoppingLists.visibility = View.VISIBLE
-            }
             myListsAdapter.submitList(lists)
         })
 
