@@ -3,9 +3,10 @@ package hu.bme.aut.android.shoppinglist.viewModels
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -16,7 +17,7 @@ import kotlinx.coroutines.*
 
 
 class MainViewModel(
-    application: Application
+        application: Application
 ) : AndroidViewModel(application) {
 
     private val firebaseDb = Firebase.firestore
@@ -27,9 +28,11 @@ class MainViewModel(
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
 
-    var lists: MutableLiveData<List<ShoppingList>> = MutableLiveData()
-    var currentUser: MutableLiveData<User> = MutableLiveData()
+    private var _lists: MutableLiveData<List<ShoppingList>> = MutableLiveData()
+    var lists: LiveData<List<ShoppingList>> = _lists
 
+    private var _currentUser: MutableLiveData<User> = MutableLiveData()
+    var currentUser: LiveData<User> = _currentUser
 
     private fun createUserObject(firebaseUser: FirebaseUser): User {
         val user = User(firebaseUser.uid)
@@ -46,41 +49,41 @@ class MainViewModel(
         usersCollectionReference.document(newUser.uid).set(createUserObject(newUser))
     }
 
-    fun getUserFromFireStore(firebaseUser: FirebaseUser) {
-        usersCollectionReference.document(firebaseUser.uid).get()
-            .addOnSuccessListener { document ->
-                val user = document.toObject<User>()
+    fun listenToUser(firebaseUser: FirebaseUser) {
+        usersCollectionReference.document(firebaseUser.uid)
+                .addSnapshotListener { value, error ->
+                    if(error != null) {
+                        return@addSnapshotListener
+                    }
 
-                currentUser.value = user;
-            }
+                    if(value != null && value.exists()) {
+                        val user = value.toObject<User>()
 
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "Request failed ", exception)
-            }
-
-    }
-
-    fun getShoppingLists() {
-        for (listId in currentUser.value?.listIds!!) {
-            listsCollectionReference.document(listId).get()
-                .addOnSuccessListener { document ->
-                    val shoppingList = document.toObject<ShoppingList>()
-                    if (shoppingList != null) {
-                        shoppingList.id = document.id
-                        val newList = lists.value?.toMutableList()
-                        if (newList != null) {
-                            newList.add(shoppingList)
-                            lists.value = newList.toList()
-                        } else {
-                            lists.value = listOf(shoppingList)
-                        }
-
+                        _currentUser.value = user
                     }
                 }
-                .addOnFailureListener { exception ->
-                    Log.d(TAG, "Request failed ", exception)
+    }
+
+    fun listenToShoppingLists() {
+        listsCollectionReference.whereIn(FieldPath.documentId(), currentUser.value?.listIds!!)
+                .addSnapshotListener { value, error ->
+                    if (error != null) {
+                        _lists.value = null
+                        return@addSnapshotListener
+                    }
+
+                    if (value != null) {
+                        val listOfShoppingLists: MutableList<ShoppingList> = mutableListOf()
+
+                        for (doc in value) {
+                            val list = doc.toObject<ShoppingList>()
+                            list.id = doc.id
+                            listOfShoppingLists.add(list)
+                        }
+
+                        _lists.value = listOfShoppingLists
+                    }
                 }
-        }
     }
 
     fun addListAndSubscribe(listName: String) {
@@ -91,20 +94,12 @@ class MainViewModel(
     }
 
     fun onDeleteItem(list: ShoppingList) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                listsCollectionReference.document(list.id).delete()
-            }
-        }
+        listsCollectionReference.document(list.id).delete()
     }
 
     fun onUpdateItem(list: ShoppingList) {
-        uiScope.launch {
-            withContext(Dispatchers.IO) {
-                val firestoreList = FirestoreShoppingList(list.name)
-                listsCollectionReference.document(list.id).set(firestoreList)
-            }
-        }
+        val firestoreList = FirestoreShoppingList(list.name)
+        listsCollectionReference.document(list.id).set(firestoreList)
     }
 
     fun subscribeToList(listId: String) {

@@ -10,20 +10,17 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.transition.MaterialFadeThrough
 import com.google.android.material.transition.platform.MaterialFade
-import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.adapters.MyListsAdapter
 import hu.bme.aut.android.shoppinglist.adapters.MyListsListener
 import hu.bme.aut.android.shoppinglist.databinding.FragmentMyListsBinding
 import hu.bme.aut.android.shoppinglist.viewModels.MainViewModel
-import hu.bme.aut.android.shoppinglist.viewModels.MainViewModelFactory
 
 
 class MyListsFragment : Fragment() {
@@ -31,7 +28,6 @@ class MyListsFragment : Fragment() {
         const val TAG = "MyListsFragment"
     }
 
-    private lateinit var analytics: FirebaseAnalytics
     private lateinit var fragmentContext: Context
     private lateinit var binding: FragmentMyListsBinding
     private lateinit var navController: NavController
@@ -52,20 +48,18 @@ class MyListsFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_my_lists, container, false)
         navController = findNavController()
         fragmentContext = requireContext()
-        analytics = FirebaseAnalytics.getInstance(fragmentContext)
         auth = FirebaseAuth.getInstance()
         val application = requireActivity().application
 
         if(auth.currentUser == null) {
             navController.navigate(MyListsFragmentDirections.actionMyListsFragmentToWelcomeFragment())
         } else {
-            mainViewModel.getUserFromFireStore(auth.currentUser!!)
-
+            mainViewModel.listenToUser(auth.currentUser!!)
         }
 
         mainViewModel.currentUser.observe(viewLifecycleOwner, { user ->
-            if(user.uid.isNotEmpty()){
-                mainViewModel.getShoppingLists()
+            if(user.uid.isNotEmpty() and user.listIds.isNotEmpty()){
+                mainViewModel.listenToShoppingLists()
             }
         })
 

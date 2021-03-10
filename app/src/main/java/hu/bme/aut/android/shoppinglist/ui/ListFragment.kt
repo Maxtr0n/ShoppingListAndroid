@@ -130,7 +130,7 @@ class ListFragment : Fragment() {
         )
         val dialog = MaterialDialog(requireContext(), BottomSheet(LayoutMode.WRAP_CONTENT))
         dialog.show {
-            gridItems(items) { _, index, item ->
+            gridItems(items) { _, index, _ ->
                 when(index) {
                     0 -> ShowEditDialog()
                     1 -> shoppingListViewModel.onDeleteItem(shoppingItem)
@@ -140,6 +140,7 @@ class ListFragment : Fragment() {
     }
 
     private fun ShowEditDialog() {
-        TODO("Not yet implemented")
+
+
     }
 }

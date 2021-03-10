@@ -41,14 +41,13 @@ class ShoppingListViewModel(
 
                             if (value != null) {
                                 val itemList: MutableList<ShoppingItem> = mutableListOf()
-                                val documents = value.documents
-                                documents.forEach {
-                                    val item = it.toObject<ShoppingItem>()
-                                    if (item != null) {
-                                        item.id = it.id
-                                        itemList.add(item)
-                                    }
+
+                                for(doc in value) {
+                                    val item = doc.toObject<ShoppingItem>()
+                                    item.id = doc.id
+                                    itemList.add(item)
                                 }
+
                                 items.value = itemList
                             }
                         }
