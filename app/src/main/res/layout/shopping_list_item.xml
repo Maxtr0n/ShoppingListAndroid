@@ -9,7 +9,7 @@
             type="hu.bme.aut.android.shoppinglist.models.ShoppingItem" />
         <variable
             name="clickListener"
-            type="hu.bme.aut.android.shoppinglist.adapters.ShoppingListListener" />
+            type="hu.bme.aut.android.shoppinglist.adapters.ShoppingListItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

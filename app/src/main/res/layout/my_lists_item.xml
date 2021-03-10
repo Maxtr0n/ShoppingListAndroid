@@ -9,7 +9,7 @@
             type="hu.bme.aut.android.shoppinglist.models.ShoppingList" />
         <variable
             name="clickListener"
-            type="hu.bme.aut.android.shoppinglist.adapters.MyListsListener" />
+            type="hu.bme.aut.android.shoppinglist.adapters.MyListsClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +27,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:onClick="@{() -> clickListener.onClick(list)}">
+            android:longClickable="true">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout

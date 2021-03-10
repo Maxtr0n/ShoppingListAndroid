@@ -1,25 +1,34 @@
 package hu.bme.aut.android.shoppinglist.ui
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
-import android.transition.TransitionManager
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.ContextCompat.getSystemServiceName
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.afollestad.materialdialogs.LayoutMode
+import com.afollestad.materialdialogs.MaterialDialog
+import com.afollestad.materialdialogs.bottomsheets.BottomSheet
+import com.afollestad.materialdialogs.list.listItems
 import com.google.android.material.transition.MaterialFadeThrough
-import com.google.android.material.transition.platform.MaterialFade
 import com.google.firebase.auth.FirebaseAuth
 import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.adapters.MyListsAdapter
-import hu.bme.aut.android.shoppinglist.adapters.MyListsListener
+import hu.bme.aut.android.shoppinglist.adapters.MyListsClickListener
+import hu.bme.aut.android.shoppinglist.adapters.MyListsLongClickListener
 import hu.bme.aut.android.shoppinglist.databinding.FragmentMyListsBinding
+import hu.bme.aut.android.shoppinglist.models.ShoppingList
 import hu.bme.aut.android.shoppinglist.viewModels.MainViewModel
 
 
@@ -64,8 +73,11 @@ class MyListsFragment : Fragment() {
         })
 
         val rvMyLists = binding.rvShoppingLists
-        val myListsAdapter = MyListsAdapter(MyListsListener { list ->
+        val myListsAdapter = MyListsAdapter(MyListsClickListener { list ->
             navController.navigate(MyListsFragmentDirections.actionMyListsFragmentToListFragment(list.id))
+        },
+        MyListsLongClickListener { list ->
+            onListLongPressed(list)
         })
 
         rvMyLists.adapter = myListsAdapter
@@ -78,12 +90,29 @@ class MyListsFragment : Fragment() {
         return binding.root
     }
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.apply {
             viewModel = mainViewModel
         }
+    }
 
+    private fun onListLongPressed(list: ShoppingList) {
+        val options = listOf("Azonosító másolása", "Leiratkozás")
+        val dialog = MaterialDialog(requireContext(), BottomSheet(LayoutMode.WRAP_CONTENT))
+        dialog.show {
+            listItems(items = options) { dialog, index, text ->
+                when(index) {
+                    0 -> copyIdToClipboard(list)
+                }
+            }
+        }
+    }
+
+    private fun copyIdToClipboard(list: ShoppingList) {
+        //val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+       // val clip: ClipData = ClipData.newPlainText()
     }
 }

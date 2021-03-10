@@ -8,14 +8,23 @@ import androidx.recyclerview.widget.RecyclerView
 import hu.bme.aut.android.shoppinglist.models.ShoppingList
 import hu.bme.aut.android.shoppinglist.databinding.MyListsItemBinding
 
-class MyListsAdapter (private val clickListener: MyListsListener) : ListAdapter<ShoppingList, MyListsAdapter.ViewHolder>(MyListsDiffCallback()) {
+class MyListsAdapter (private val clickListener: MyListsClickListener, private val longClickListener: MyListsLongClickListener) : ListAdapter<ShoppingList, MyListsAdapter.ViewHolder>(MyListsDiffCallback()) {
 
     class ViewHolder private constructor(val binding: MyListsItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(list: ShoppingList, clickListener: MyListsListener){
+        fun bind(list: ShoppingList, clickListener: MyListsClickListener, longClickListener: MyListsLongClickListener){
             binding.list = list
             binding.clickListener = clickListener
             binding.executePendingBindings()
+
+            itemView.setOnClickListener {
+                clickListener.onClick(list)
+            }
+
+            itemView.setOnLongClickListener {
+                longClickListener.onLongClick(list)
+                return@setOnLongClickListener true
+            }
         }
 
         companion object {
@@ -35,7 +44,7 @@ class MyListsAdapter (private val clickListener: MyListsListener) : ListAdapter<
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
 
-        holder.bind(item, clickListener)
+        holder.bind(item, clickListener, longClickListener)
     }
 
     fun getItemAt(position: Int) : ShoppingList {
@@ -54,6 +63,12 @@ class MyListsDiffCallback : DiffUtil.ItemCallback<ShoppingList>() {
     }
 }
 
-class MyListsListener(val clickListener: (list: ShoppingList) -> Unit) {
+class MyListsClickListener(val clickListener: (list: ShoppingList) -> Unit) {
     fun onClick(list: ShoppingList) = clickListener(list)
 }
+
+class MyListsLongClickListener(val longClickListener: (list: ShoppingList) -> Unit) {
+    fun onLongClick(list: ShoppingList) = longClickListener(list)
+}
+
+

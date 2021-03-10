@@ -1,5 +1,6 @@
 package hu.bme.aut.android.shoppinglist.adapters
 
+import android.view.View
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
