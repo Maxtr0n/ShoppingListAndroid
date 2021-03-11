@@ -3,7 +3,6 @@ package hu.bme.aut.android.shoppinglist.ui
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.Context.CLIPBOARD_SERVICE
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -68,7 +67,7 @@ class MyListsFragment : Fragment() {
 
         mainViewModel.currentUser.observe(viewLifecycleOwner, { user ->
             if(user != null){
-                if(user.uid.isNotEmpty() and user.listIds.isNotEmpty()){
+                if(user.uid.isNotEmpty()){
                     mainViewModel.listenToShoppingLists()
                 }
             }
@@ -108,13 +107,19 @@ class MyListsFragment : Fragment() {
             listItems(items = options) { dialog, index, text ->
                 when(index) {
                     0 -> copyIdToClipboard(list)
+                    1 -> unsubscribeFromList(list)
                 }
             }
         }
     }
 
     private fun copyIdToClipboard(list: ShoppingList) {
-        //val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-       // val clip: ClipData = ClipData.newPlainText()
+        val clipboard = fragmentContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip: ClipData = ClipData.newPlainText("listId", list.id)
+        clipboard.setPrimaryClip(clip)
+    }
+
+    private fun unsubscribeFromList(list: ShoppingList) {
+        mainViewModel.unsubscribeFromList(list.id)
     }
 }

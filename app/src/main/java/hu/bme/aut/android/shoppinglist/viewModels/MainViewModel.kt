@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldPath
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.MetadataChanges
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -55,22 +56,26 @@ class MainViewModel(
 
     fun listenToUser(firebaseUser: FirebaseUser) {
         userListenerRegistration = usersCollectionReference.document(firebaseUser.uid)
-                .addSnapshotListener { value, error ->
+                .addSnapshotListener(MetadataChanges.INCLUDE) { value, error ->
                     if(error != null) {
                         return@addSnapshotListener
                     }
 
                     if(value != null && value.exists()) {
                         val user = value.toObject<User>()
-
                         _currentUser.value = user
                     }
                 }
     }
 
     fun listenToShoppingLists() {
+        if(currentUser.value?.listIds.isNullOrEmpty()) {
+            _lists.value = emptyList()
+            return
+        }
+        
         listsListenerRegistration = listsCollectionReference.whereIn(FieldPath.documentId(), currentUser.value?.listIds!!)
-                .addSnapshotListener { value, error ->
+                .addSnapshotListener() { value, error ->
                     if (error != null) {
                         _lists.value = null
                         return@addSnapshotListener
@@ -97,11 +102,11 @@ class MainViewModel(
         }
     }
 
-    fun onDeleteItem(list: ShoppingList) {
+    fun deleteList(list: ShoppingList) {
         listsCollectionReference.document(list.id).delete()
     }
 
-    fun onUpdateItem(list: ShoppingList) {
+    fun updateList(list: ShoppingList) {
         val firestoreList = FirestoreShoppingList(list.name)
         listsCollectionReference.document(list.id).set(firestoreList)
     }
@@ -110,6 +115,14 @@ class MainViewModel(
         val user = currentUser.value
         if (user != null) {
             user.listIds.add(listId)
+            usersCollectionReference.document(user.uid).set(user)
+        }
+    }
+
+    fun unsubscribeFromList(listId: String) {
+        val user = currentUser.value
+        if(user != null) {
+            user.listIds.remove(listId)
             usersCollectionReference.document(user.uid).set(user)
         }
     }
