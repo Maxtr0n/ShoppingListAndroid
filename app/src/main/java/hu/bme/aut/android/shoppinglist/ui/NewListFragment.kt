@@ -15,7 +15,6 @@ import com.google.android.material.transition.MaterialFadeThrough
 import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.databinding.FragmentNewListBinding
 import hu.bme.aut.android.shoppinglist.viewModels.MainViewModel
-import hu.bme.aut.android.shoppinglist.viewModels.MainViewModelFactory
 
 
 class NewListFragment : Fragment() {

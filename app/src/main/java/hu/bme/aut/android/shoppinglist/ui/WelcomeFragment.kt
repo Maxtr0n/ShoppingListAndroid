@@ -22,7 +22,6 @@ import com.google.firebase.auth.FirebaseAuth
 import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.databinding.FragmentWelcomeBinding
 import hu.bme.aut.android.shoppinglist.viewModels.MainViewModel
-import hu.bme.aut.android.shoppinglist.viewModels.MainViewModelFactory
 
 
 class WelcomeFragment : Fragment() {

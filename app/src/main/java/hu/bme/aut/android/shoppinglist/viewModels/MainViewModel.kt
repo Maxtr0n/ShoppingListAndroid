@@ -73,9 +73,9 @@ class MainViewModel(
             _lists.value = emptyList()
             return
         }
-        
+
         listsListenerRegistration = listsCollectionReference.whereIn(FieldPath.documentId(), currentUser.value?.listIds!!)
-                .addSnapshotListener() { value, error ->
+                .addSnapshotListener { value, error ->
                     if (error != null) {
                         _lists.value = null
                         return@addSnapshotListener
