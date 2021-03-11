@@ -58,27 +58,28 @@ class WelcomeFragment : Fragment() {
 
     private fun launchSignInFlow() {
         val providers = arrayListOf(
-            AuthUI.IdpConfig.EmailBuilder().build(),
-            AuthUI.IdpConfig.GoogleBuilder().build()
+                AuthUI.IdpConfig.EmailBuilder().build(),
+                AuthUI.IdpConfig.GoogleBuilder().build()
         )
 
         startActivityForResult(
-            AuthUI.getInstance()
-                .createSignInIntentBuilder()
-                .setAvailableProviders(providers)
-                .build(),
-            SIGN_IN_RESULT_CODE
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .setTheme(R.style.Theme_DefaultTheme)
+                        .build(),
+                SIGN_IN_RESULT_CODE
         )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == SIGN_IN_RESULT_CODE) {
+        if (requestCode == SIGN_IN_RESULT_CODE) {
             val response = IdpResponse.fromResultIntent(data)
-            if(resultCode == Activity.RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {
                 val user = auth.currentUser
                 if (response != null) {
-                    if(response.isNewUser) {
+                    if (response.isNewUser) {
                         //viewmodel -> tegyen be uj usert a firestoreba
                         if (user != null) {
                             mainViewModel.addUserToFirestore(user)
@@ -87,11 +88,11 @@ class WelcomeFragment : Fragment() {
                 }
                 navController.navigate(WelcomeFragmentDirections.actionWelcomeFragmentToMyListsFragment())
             } else {
-                if(response == null) {
+                if (response == null) {
                     showSnackbar(R.string.sikertelen_bejelentkezes)
                     return
                 }
-                if(response.error?.errorCode == ErrorCodes.NO_NETWORK) {
+                if (response.error?.errorCode == ErrorCodes.NO_NETWORK) {
                     showSnackbar(R.string.nincs_internet)
                     return
                 }

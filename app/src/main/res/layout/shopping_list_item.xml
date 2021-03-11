@@ -27,7 +27,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:cardBackgroundColor="@color/primaryLightColor"
+            app:cardBackgroundColor="@color/primaryColor"
             app:cardCornerRadius="8dp">
 
 
