@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FieldPath
+import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -27,6 +28,9 @@ class MainViewModel(
     private val TAG = "MainViewModel"
     private var viewModelJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + viewModelJob)
+
+    private lateinit var userListenerRegistration: ListenerRegistration
+    private lateinit var listsListenerRegistration: ListenerRegistration
 
     private var _lists: MutableLiveData<List<ShoppingList>> = MutableLiveData()
     var lists: LiveData<List<ShoppingList>> = _lists
@@ -50,7 +54,7 @@ class MainViewModel(
     }
 
     fun listenToUser(firebaseUser: FirebaseUser) {
-        usersCollectionReference.document(firebaseUser.uid)
+        userListenerRegistration = usersCollectionReference.document(firebaseUser.uid)
                 .addSnapshotListener { value, error ->
                     if(error != null) {
                         return@addSnapshotListener
@@ -65,7 +69,7 @@ class MainViewModel(
     }
 
     fun listenToShoppingLists() {
-        listsCollectionReference.whereIn(FieldPath.documentId(), currentUser.value?.listIds!!)
+        listsListenerRegistration = listsCollectionReference.whereIn(FieldPath.documentId(), currentUser.value?.listIds!!)
                 .addSnapshotListener { value, error ->
                     if (error != null) {
                         _lists.value = null
@@ -108,6 +112,13 @@ class MainViewModel(
             user.listIds.add(listId)
             usersCollectionReference.document(user.uid).set(user)
         }
+    }
+
+    fun signOutUser() {
+        userListenerRegistration.remove()
+        listsListenerRegistration.remove()
+        _lists.value = null
+        _currentUser.value = null
     }
 
     override fun onCleared() {

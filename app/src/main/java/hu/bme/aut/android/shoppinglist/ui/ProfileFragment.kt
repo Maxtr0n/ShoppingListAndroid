@@ -36,10 +36,6 @@ class ProfileFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
         auth = FirebaseAuth.getInstance()
 
-
-
-
-
         return binding.root
     }
 
@@ -53,6 +49,7 @@ class ProfileFragment : Fragment() {
         }
 
         binding.btnLogout.setOnClickListener {
+            mainViewModel.signOutUser()
             AuthUI.getInstance().signOut(requireContext())
                     .addOnCompleteListener {
                         if (it.isSuccessful) {

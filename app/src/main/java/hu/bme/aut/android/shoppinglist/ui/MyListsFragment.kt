@@ -67,8 +67,10 @@ class MyListsFragment : Fragment() {
         }
 
         mainViewModel.currentUser.observe(viewLifecycleOwner, { user ->
-            if(user.uid.isNotEmpty() and user.listIds.isNotEmpty()){
-                mainViewModel.listenToShoppingLists()
+            if(user != null){
+                if(user.uid.isNotEmpty() and user.listIds.isNotEmpty()){
+                    mainViewModel.listenToShoppingLists()
+                }
             }
         })
 
