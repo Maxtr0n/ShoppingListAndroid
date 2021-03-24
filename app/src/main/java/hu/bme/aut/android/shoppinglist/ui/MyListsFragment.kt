@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.ContextCompat.getSystemServiceName
 import androidx.databinding.DataBindingUtil
@@ -104,6 +105,7 @@ class MyListsFragment : Fragment() {
         val options = listOf("Azonosító másolása", "Leiratkozás")
         val dialog = MaterialDialog(requireContext(), BottomSheet(LayoutMode.WRAP_CONTENT))
         dialog.show {
+            title(text = list.name)
             listItems(items = options) { dialog, index, text ->
                 when(index) {
                     0 -> copyIdToClipboard(list)
@@ -117,6 +119,7 @@ class MyListsFragment : Fragment() {
         val clipboard = fragmentContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clip: ClipData = ClipData.newPlainText("listId", list.id)
         clipboard.setPrimaryClip(clip)
+        Toast.makeText(fragmentContext, "Azonosító kimásolva", Toast.LENGTH_SHORT).show()
     }
 
     private fun unsubscribeFromList(list: ShoppingList) {

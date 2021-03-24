@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -36,6 +37,7 @@ class ProfileFragment : Fragment() {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
         auth = FirebaseAuth.getInstance()
 
+
         return binding.root
     }
 
@@ -60,5 +62,22 @@ class ProfileFragment : Fragment() {
                         }
                     }
         }
+
+        binding.radioGroupTheme.setOnCheckedChangeListener{ group, checkedId ->
+            when(checkedId) {
+                R.id.radioButtonDefault -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                R.id.radioButtonLight -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                R.id.radioButtonDark -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+        }
+
+        /*mainViewModel.darkModeEnabled.observe(viewLifecycleOwner, { darkModeEnabled ->
+            if(darkModeEnabled) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+            }
+        })*/
     }
 }

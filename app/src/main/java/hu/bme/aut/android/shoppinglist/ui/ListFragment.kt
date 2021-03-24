@@ -101,6 +101,7 @@ class ListFragment : Fragment() {
         val options = listOf("Szerkesztés", "Törlés")
         val dialog = MaterialDialog(requireContext(), BottomSheet(LayoutMode.WRAP_CONTENT))
         dialog.show {
+            title(text = shoppingItem.name)
             listItems(items = options) { dialog, index, text ->
                 when(index){
                     0 -> showEditDialog(shoppingItem)

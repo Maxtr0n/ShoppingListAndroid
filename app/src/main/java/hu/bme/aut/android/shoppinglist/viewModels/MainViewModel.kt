@@ -39,6 +39,10 @@ class MainViewModel(
     private var _currentUser: MutableLiveData<User> = MutableLiveData()
     var currentUser: LiveData<User> = _currentUser
 
+    //private var _darkModeEnabled: MutableLiveData<Boolean> = MutableLiveData()
+    //var darkModeEnabled: LiveData<Boolean> = _darkModeEnabled
+
+
     private fun createUserObject(firebaseUser: FirebaseUser): User {
         val user = User(firebaseUser.uid)
         if (firebaseUser.email != null) {
