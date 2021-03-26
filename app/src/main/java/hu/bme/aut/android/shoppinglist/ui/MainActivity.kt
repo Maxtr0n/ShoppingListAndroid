@@ -37,6 +37,8 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = binding.bottomNavigation
         NavigationUI.setupWithNavController(bottomNavigationView, navController)
 
+
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {
                 R.id.listFragment, R.id.welcomeFragment -> hideBottomNavigation()

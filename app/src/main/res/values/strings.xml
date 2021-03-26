@@ -44,5 +44,7 @@
     <string name="alapertelmezett">Alapértelmezett</string>
     <string name="vilagos">Világos</string>
     <string name="sotet">Sötét</string>
+    <string name="theme">Téma</string>
     <string name="settings">Beállítások</string>
+    <string name="appearance">Megjelenés</string>
 </resources>

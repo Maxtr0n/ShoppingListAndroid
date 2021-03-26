@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
@@ -63,13 +64,18 @@ class ProfileFragment : Fragment() {
                     }
         }
 
-        binding.radioGroupTheme.setOnCheckedChangeListener{ group, checkedId ->
+        binding.btnSettings.setOnClickListener {
+            val navController = findNavController()
+            navController.navigate(ProfileFragmentDirections.actionProfileFragmentToSettingsFragment())
+        }
+
+       /* binding.radioGroupTheme.setOnCheckedChangeListener{ group, checkedId ->
             when(checkedId) {
                 R.id.radioButtonDefault -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                 R.id.radioButtonLight -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 R.id.radioButtonDark -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             }
-        }
+        }*/
 
         /*mainViewModel.darkModeEnabled.observe(viewLifecycleOwner, { darkModeEnabled ->
             if(darkModeEnabled) {

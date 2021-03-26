@@ -44,6 +44,8 @@ android {
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.preference:preference:1.1.1'
     def lifecycle_version = '2.3.0'
     def room_version = "2.2.6"
 
