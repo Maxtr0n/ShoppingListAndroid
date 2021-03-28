@@ -10,6 +10,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.navigateUp
+import androidx.preference.PreferenceManager
 import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.databinding.ActivityMainBinding
 
@@ -24,8 +25,14 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        navController = this.findNavController(R.id.myNavHostFragment)
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+        when(sharedPreferences.getString("theme", "default")){
+            "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            "default" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
 
+        navController = this.findNavController(R.id.myNavHostFragment)
         appBarConfiguration = AppBarConfiguration
                 .Builder(
                         R.id.myListsFragment,
@@ -36,8 +43,6 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration)
         val bottomNavigationView = binding.bottomNavigation
         NavigationUI.setupWithNavController(bottomNavigationView, navController)
-
-
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {
