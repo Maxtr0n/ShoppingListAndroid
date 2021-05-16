@@ -6,10 +6,10 @@
     <data>
         <variable
             name="item"
-            type="hu.bme.aut.android.shoppinglist.database.ShoppingItem" />
+            type="hu.bme.aut.android.shoppinglist.models.ShoppingItem" />
         <variable
             name="clickListener"
-            type="hu.bme.aut.android.shoppinglist.adapters.ShoppingListListener" />
+            type="hu.bme.aut.android.shoppinglist.adapters.ShoppingListItemClickListener" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,14 +20,15 @@
             android:id="@+id/card"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:onClick="@{() -> clickListener.onClick(item)}">
+            app:cardBackgroundColor="@color/primaryColor"
+            app:cardCornerRadius="8dp">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,7 +54,8 @@
                     app:ItemName="@{item}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/cb_item"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textColor="@color/primaryTextColor"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,24 +5,34 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import hu.bme.aut.android.shoppinglist.database.ShoppingItem
-import hu.bme.aut.android.shoppinglist.databinding.ListItemBinding
+import hu.bme.aut.android.shoppinglist.models.ShoppingItem
+import hu.bme.aut.android.shoppinglist.databinding.ShoppingListItemBinding
 
 
-class ShoppingListAdapter(private val clickListener: ShoppingListListener) : ListAdapter<ShoppingItem, ShoppingListAdapter.ViewHolder>(ShoppingListDiffCallback()) {
+class ShoppingItemListAdapter(private val clickListener: ShoppingListItemClickListener, private val longClickListener: ShoppingListItemLongClickListener) : ListAdapter<ShoppingItem, ShoppingItemListAdapter.ViewHolder>(ShoppingListDiffCallback()) {
 
-    class ViewHolder private constructor(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ShoppingItem, clickListener: ShoppingListListener){
+    class ViewHolder private constructor(val binding: ShoppingListItemBinding) : RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(item: ShoppingItem, clickListener: ShoppingListItemClickListener, longClickListener: ShoppingListItemLongClickListener){
             binding.item = item
             binding.clickListener = clickListener
             binding.executePendingBindings()
+
+            itemView.setOnLongClickListener {
+                longClickListener.onLongClick(item)
+                return@setOnLongClickListener true
+            }
+
+            itemView.setOnClickListener {
+                clickListener.onClick(item)
+            }
         }
 
         companion object {
             fun from(parent: ViewGroup): ViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ListItemBinding.inflate(layoutInflater, parent, false)
+                val binding = ShoppingListItemBinding.inflate(layoutInflater, parent, false)
 
                 return ViewHolder(binding)
             }
@@ -36,7 +46,7 @@ class ShoppingListAdapter(private val clickListener: ShoppingListListener) : Lis
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
 
-        holder.bind(item, clickListener)
+        holder.bind(item, clickListener, longClickListener)
     }
 
     fun getItemAt(position: Int) : ShoppingItem{
@@ -55,6 +65,11 @@ class ShoppingListDiffCallback : DiffUtil.ItemCallback<ShoppingItem>() {
     }
 }
 
-class ShoppingListListener(val clickListener: (item: ShoppingItem) -> Unit) {
+class ShoppingListItemClickListener(val clickListener: (item: ShoppingItem) -> Unit) {
     fun onClick(item: ShoppingItem) = clickListener(item)
 }
+
+class ShoppingListItemLongClickListener(val longClickListener: (item: ShoppingItem) -> Unit) {
+    fun onLongClick(item: ShoppingItem) = longClickListener(item)
+}
+
