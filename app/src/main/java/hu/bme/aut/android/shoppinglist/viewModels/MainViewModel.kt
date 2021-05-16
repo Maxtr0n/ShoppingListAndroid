@@ -1,6 +1,7 @@
 package hu.bme.aut.android.shoppinglist.viewModels
 
 import android.app.Application
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -16,6 +17,7 @@ import hu.bme.aut.android.shoppinglist.models.FirestoreShoppingList
 import hu.bme.aut.android.shoppinglist.models.ShoppingList
 import hu.bme.aut.android.shoppinglist.models.User
 import kotlinx.coroutines.*
+import java.net.URI
 
 
 class MainViewModel(
@@ -38,10 +40,6 @@ class MainViewModel(
 
     private var _currentUser: MutableLiveData<User> = MutableLiveData()
     var currentUser: LiveData<User> = _currentUser
-
-    //private var _darkModeEnabled: MutableLiveData<Boolean> = MutableLiveData()
-    //var darkModeEnabled: LiveData<Boolean> = _darkModeEnabled
-
 
     private fun createUserObject(firebaseUser: FirebaseUser): User {
         val user = User(firebaseUser.uid)
@@ -127,6 +125,14 @@ class MainViewModel(
         val user = currentUser.value
         if(user != null) {
             user.listIds.remove(listId)
+            usersCollectionReference.document(user.uid).set(user)
+        }
+    }
+
+    fun setUserProfilePicture() {
+        val user = currentUser.value
+        if(user != null){
+            user.hasProfilePicture = true
             usersCollectionReference.document(user.uid).set(user)
         }
     }

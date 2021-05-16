@@ -6,6 +6,7 @@ data class User(
         var uid: String = "",
         var name: String = "",
         var email: String = "",
+        var hasProfilePicture: Boolean = false,
         var listIds: ArrayList<String> = ArrayList()
 
 ){

@@ -1,28 +1,40 @@
 package hu.bme.aut.android.shoppinglist.ui
 
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatDelegate
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialFadeThrough
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import hu.bme.aut.android.shoppinglist.R
+import hu.bme.aut.android.shoppinglist.adapters.GlideApp
 import hu.bme.aut.android.shoppinglist.databinding.FragmentProfileBinding
 import hu.bme.aut.android.shoppinglist.viewModels.MainViewModel
+import kotlinx.coroutines.currentCoroutineContext
 
 class ProfileFragment : Fragment() {
 
     private lateinit var binding: FragmentProfileBinding
     private lateinit var auth: FirebaseAuth
     private val mainViewModel: MainViewModel by activityViewModels()
+    private val storageReference = Firebase.storage.reference
+    private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if(uri != null) {
+            uploadImageToFirebase(uri)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,11 +45,11 @@ class ProfileFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
         auth = FirebaseAuth.getInstance()
-
+        
 
         return binding.root
     }
@@ -69,21 +81,40 @@ class ProfileFragment : Fragment() {
             navController.navigate(ProfileFragmentDirections.actionProfileFragmentToSettingsFragment())
         }
 
-       /* binding.radioGroupTheme.setOnCheckedChangeListener{ group, checkedId ->
-            when(checkedId) {
-                R.id.radioButtonDefault -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                R.id.radioButtonLight -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                R.id.radioButtonDark -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-        }*/
+        binding.ivProfilePicture.setOnClickListener {
+            getContent.launch("image/*")
+        }
 
-        /*mainViewModel.darkModeEnabled.observe(viewLifecycleOwner, { darkModeEnabled ->
-            if(darkModeEnabled) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
+        mainViewModel.currentUser.observe(viewLifecycleOwner) { user ->
+            if(user != null){
+                if(user.hasProfilePicture){
+                    val pfpReference = storageReference.child(user.uid + ".jpg")
+                    GlideApp.with(this).load(pfpReference).placeholder(R.drawable.ic_avatar_placeholder).into(binding.ivProfilePicture)
+                }
+                else{
+                    binding.ivProfilePicture.setImageResource(R.drawable.ic_avatar_placeholder)
+                }
             }
-        })*/
+        }
+    }
+
+    private fun uploadImageToFirebase(uri: Uri) {
+        val inputStream = requireContext().contentResolver.openInputStream(uri)
+        inputStream?.let {
+            val fileName = mainViewModel.currentUser.value!!.uid + ".jpg"
+            val pfpRef = storageReference.child(fileName)
+            val uploadTask = pfpRef.putStream(inputStream)
+            uploadTask.addOnFailureListener {
+                Toast.makeText(
+                    requireContext(),
+                    "A képet nem sikerült feltölteni",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }.addOnSuccessListener {
+                Toast.makeText(requireContext(), "Sikeres feltöltés", Toast.LENGTH_SHORT).show()
+                mainViewModel.setUserProfilePicture()
+            }
+
+        }
     }
 }
