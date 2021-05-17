@@ -1,4 +1,4 @@
-package hu.bme.aut.android.shoppinglist.ui
+package hu.bme.aut.android.shoppinglist.views
 
 import android.content.Context
 import android.os.Bundle
@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.input
 import com.google.android.material.transition.MaterialFadeThrough

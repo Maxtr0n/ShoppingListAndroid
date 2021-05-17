@@ -1,4 +1,4 @@
-package hu.bme.aut.android.shoppinglist.ui
+package hu.bme.aut.android.shoppinglist.views
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -9,8 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.content.ContextCompat.getSystemServiceName
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer

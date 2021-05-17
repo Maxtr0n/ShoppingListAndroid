@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/listFragment"
-        android:name="hu.bme.aut.android.shoppinglist.ui.ListFragment"
+        android:name="hu.bme.aut.android.shoppinglist.views.ListFragment"
         android:label="@string/lista"
         tools:layout="@layout/fragment_list">
         <argument
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/newListFragment"
-        android:name="hu.bme.aut.android.shoppinglist.ui.NewListFragment"
+        android:name="hu.bme.aut.android.shoppinglist.views.NewListFragment"
         android:label="@string/uj_lista"
         tools:layout="@layout/fragment_new_list" >
         <action
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
-        android:name="hu.bme.aut.android.shoppinglist.ui.ProfileFragment"
+        android:name="hu.bme.aut.android.shoppinglist.views.ProfileFragment"
         android:label="@string/profil"
         tools:layout="@layout/fragment_profile" >
         <action
@@ -41,7 +41,7 @@
     </fragment>
     <fragment
         android:id="@+id/myListsFragment"
-        android:name="hu.bme.aut.android.shoppinglist.ui.MyListsFragment"
+        android:name="hu.bme.aut.android.shoppinglist.views.MyListsFragment"
         android:label="@string/listaim"
         tools:layout="@layout/fragment_my_lists" >
         <action
@@ -61,7 +61,7 @@
     </fragment>
     <fragment
         android:id="@+id/welcomeFragment"
-        android:name="hu.bme.aut.android.shoppinglist.ui.WelcomeFragment"
+        android:name="hu.bme.aut.android.shoppinglist.views.WelcomeFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_welcome">
         <action
@@ -72,6 +72,6 @@
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="hu.bme.aut.android.shoppinglist.ui.SettingsFragment"
+        android:name="hu.bme.aut.android.shoppinglist.views.SettingsFragment"
         android:label="@string/settings" />
 </navigation>

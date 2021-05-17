@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.NewListFragment">
+        tools:context=".views.NewListFragment">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_add"

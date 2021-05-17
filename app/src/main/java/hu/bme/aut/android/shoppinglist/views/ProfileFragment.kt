@@ -1,4 +1,4 @@
-package hu.bme.aut.android.shoppinglist.ui
+package hu.bme.aut.android.shoppinglist.views
 
 import android.net.Uri
 import android.os.Bundle
@@ -11,7 +11,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.transition.MaterialFadeThrough
@@ -22,7 +21,6 @@ import hu.bme.aut.android.shoppinglist.R
 import hu.bme.aut.android.shoppinglist.adapters.GlideApp
 import hu.bme.aut.android.shoppinglist.databinding.FragmentProfileBinding
 import hu.bme.aut.android.shoppinglist.viewModels.MainViewModel
-import kotlinx.coroutines.currentCoroutineContext
 
 class ProfileFragment : Fragment() {
 
@@ -64,12 +62,12 @@ class ProfileFragment : Fragment() {
         }
 
         binding.btnLogout.setOnClickListener {
-            mainViewModel.signOutUser()
             AuthUI.getInstance().signOut(requireContext())
                     .addOnCompleteListener {
                         if (it.isSuccessful) {
                             val navController = findNavController()
                             navController.navigate(ProfileFragmentDirections.actionProfileFragmentToWelcomeFragment())
+                            mainViewModel.signOutUser()
                         } else {
                             Snackbar.make(view, getString(R.string.kijelentkezes_sikertelebn), Snackbar.LENGTH_LONG).show()
                         }

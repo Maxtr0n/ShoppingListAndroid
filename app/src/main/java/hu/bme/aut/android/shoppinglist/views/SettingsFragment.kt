@@ -1,4 +1,4 @@
-package hu.bme.aut.android.shoppinglist.ui
+package hu.bme.aut.android.shoppinglist.views
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate

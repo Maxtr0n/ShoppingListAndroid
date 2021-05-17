@@ -138,8 +138,8 @@ class MainViewModel(
     }
 
     fun signOutUser() {
-        userListenerRegistration.remove()
-        listsListenerRegistration.remove()
+       // userListenerRegistration.remove()
+       // listsListenerRegistration.remove()
         _lists.value = null
         _currentUser.value = null
     }
