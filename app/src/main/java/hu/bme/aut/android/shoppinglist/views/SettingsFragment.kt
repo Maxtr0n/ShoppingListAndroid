@@ -16,7 +16,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         themePref?.entries = arrayOf("Világos", "Sötét", "Alapértelmezett (Rendszer)")
 
         themePref?.setOnPreferenceChangeListener { _, newValue ->
-            when(newValue){
+            when (newValue) {
                 "light" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 "dark" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 "default" -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
@@ -24,5 +24,4 @@ class SettingsFragment : PreferenceFragmentCompat() {
             true
         }
     }
-
 }

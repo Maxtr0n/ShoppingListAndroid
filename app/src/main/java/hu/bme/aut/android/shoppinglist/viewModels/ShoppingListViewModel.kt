@@ -30,26 +30,24 @@ class ShoppingListViewModel(
 
     private fun listenToShoppingItems() {
         itemsCollectionReference
-                .orderBy("name")
-                .addSnapshotListener(MetadataChanges.INCLUDE) { value, error ->
-                    if (error != null) {
-                        items.value = null
-                        return@addSnapshotListener
-                    }
-
-                    if (value != null) {
-                        val itemList: MutableList<ShoppingItem> = mutableListOf()
-
-                        for (doc in value) {
-                            val item = doc.toObject<ShoppingItem>()
-                            item.id = doc.id
-                            itemList.add(item)
-                        }
-
-                        items.value = itemList
-                    }
+            .orderBy("name")
+            .addSnapshotListener(MetadataChanges.INCLUDE) { value, error ->
+                if (error != null) {
+                    items.value = null
+                    return@addSnapshotListener
                 }
 
+                if (value != null) {
+                    val itemList: MutableList<ShoppingItem> = mutableListOf()
+
+                    for (doc in value) {
+                        val item = doc.toObject<ShoppingItem>()
+                        item.id = doc.id
+                        itemList.add(item)
+                    }
+                    items.value = itemList
+                }
+            }
     }
 
     fun addItem(item: ShoppingItem) {

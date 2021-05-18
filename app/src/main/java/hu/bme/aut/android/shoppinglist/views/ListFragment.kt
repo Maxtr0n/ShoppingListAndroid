@@ -103,7 +103,7 @@ class ListFragment : Fragment() {
         dialog.show {
             title(text = shoppingItem.name)
             listItems(items = options) { dialog, index, text ->
-                when(index){
+                when (index) {
                     0 -> showEditDialog(shoppingItem)
                     1 -> shoppingListViewModel.deleteItem(shoppingItem)
                 }
